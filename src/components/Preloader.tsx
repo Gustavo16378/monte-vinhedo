@@ -1,8 +1,4 @@
-import { useRef, useState } from 'react';
-import { gsap, useGSAP } from '../motion/gsap';
-import { EASE_SAIDA } from '../motion/tokens';
 import { MONOGRAM_M, MONOGRAM_V, MONOGRAM_VIEWBOX } from '../assets/monogram';
-import { getLenis } from '../motion/useSmoothScroll';
 
 const CHAVE_SESSAO = 'mv:preloader';
 
@@ -15,76 +11,32 @@ export function preloaderJaRodou(): boolean {
   }
 }
 
-type PreloaderProps = {
-  /** dispara quando a cortina termina de subir — é a deixa do hero */
-  readonly onDone: () => void;
+export function marcarPreloaderVisto(): void {
+  try {
+    sessionStorage.setItem(CHAVE_SESSAO, '1');
+  } catch {
+    /* storage indisponível: só não memoriza a sessão */
+  }
+}
+
+type CortinaProps = {
+  readonly refCortina: React.RefObject<HTMLDivElement | null>;
 };
 
 /**
- * Preloader — MOTION.md §0.
+ * Cortina do preloader — MOTION.md §0. Só markup.
  *
- * Monograma MV traçado com DrawSVG sobre bordô cheio, a frase surgindo a 50%
- * de opacidade, e a saída como uma cortina que sobe em `clip-path`.
- * Teto de 2,8s, uma vez por sessão.
+ * A animação vive na master timeline do <Hero />, não aqui: o desenho do
+ * monograma, a frase, a subida da cortina e a entrada do hero são uma
+ * sequência só, e é isso que elimina o piscar entre as duas.
+ *
+ * O <Hero /> monta isto num portal para o <body>, fora do palco que tem
+ * `perspective` — senão a cortina deixaria de ser fixa em relação à tela.
  */
-export function Preloader({ onDone }: PreloaderProps): React.JSX.Element | null {
-  const raiz = useRef<HTMLDivElement>(null);
-  const [saiu, setSaiu] = useState(false);
-
-  useGSAP(
-    () => {
-      const el = raiz.current;
-      if (!el) return;
-
-      getLenis()?.stop();
-
-      const encerrar = () => {
-        try {
-          sessionStorage.setItem(CHAVE_SESSAO, '1');
-        } catch {
-          /* storage indisponível: só não memoriza a sessão */
-        }
-        getLenis()?.start();
-        setSaiu(true);
-        onDone();
-      };
-
-      const mm = gsap.matchMedia();
-
-      mm.add('(prefers-reduced-motion: reduce)', () => {
-        // sem traço, sem cortina: só o fade que a diretriz preserva
-        const tl = gsap.timeline({ onComplete: encerrar });
-        tl.set('[data-preloader-traco]', { drawSVG: '100%' })
-          .to('[data-preloader-frase]', { opacity: 0.5, duration: 0.3 })
-          .to(el, { opacity: 0, duration: 0.4, ease: EASE_SAIDA }, '+=0.2');
-        return () => tl.kill();
-      });
-
-      mm.add('(prefers-reduced-motion: no-preference)', () => {
-        const tl = gsap.timeline({ onComplete: encerrar });
-
-        tl.fromTo(
-          '[data-preloader-traco]',
-          { drawSVG: '0%' },
-          { drawSVG: '100%', duration: 1.6, ease: EASE_SAIDA, stagger: 0.18 },
-        )
-          .to('[data-preloader-frase]', { opacity: 0.5, duration: 0.8, ease: EASE_SAIDA }, 0.7)
-          // a cortina sobe montada no fim do traço: o total fecha em ~2,7s
-          .to(el, { clipPath: 'inset(0 0 100% 0)', duration: 1.0, ease: EASE_SAIDA }, 1.7);
-
-        return () => tl.kill();
-      });
-
-      return () => mm.revert();
-    },
-    { scope: raiz, dependencies: [onDone] },
-  );
-
-  if (saiu) return null;
-
+export function Cortina({ refCortina }: CortinaProps): React.JSX.Element {
   return (
     <div
-      ref={raiz}
+      ref={refCortina}
       aria-hidden="true"
       className="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-bordo"
       style={{ clipPath: 'inset(0 0 0% 0)' }}
@@ -103,7 +55,7 @@ export function Preloader({ onDone }: PreloaderProps): React.JSX.Element | null 
 
       <p
         data-preloader-frase
-        className="mt-[clamp(28px,4vh,44px)] text-[11px] tracking-[0.42em] text-creme uppercase opacity-0"
+        className="oculto-na-abertura mt-[clamp(28px,4vh,44px)] text-[11px] tracking-[.42em] text-creme uppercase"
         style={{ paddingLeft: '0.42em' }}
       >
         toda safra começa com paciência

@@ -273,16 +273,27 @@ def build_images() -> dict:
 # --------------------------------------------------------------------------- #
 # 3. retalhos do rótulo (QR code + textos "mockupfree")                        #
 # --------------------------------------------------------------------------- #
-# Regiões medidas sobre garrafa-hero-recorte.png (341x1197):
+# Regiões medidas sobre garrafa-hero-recorte.png (341x1197). Juntas, limpam o
+# rótulo inteiro do mockup para que ele possa ser rebatizado:
+#   C  y 615..667  -> "RED LABEL"
 #   A  y 686..727  -> "A wine bottle label mockup / set from mockupfree.net"
-#   B  y 946..1027 -> QR code + "MOCKUPFREE.NET" + fine print
+#   D  y 793..873  -> monograma "MF"
+#   B  y 946..1027 -> QR code + "MOCKUPFREE.NET" + letra miúda
 # Cada retalho reconstrói o rótulo: textura (alta frequência) doada de uma
 # faixa limpa da própria etiqueta + iluminação (baixa frequência) interpolada
 # a partir das linhas limpas que cercam a região coberta.
+# `fx` é a largura do esfumado lateral. O rótulo tem um brilho especular
+# forte à esquerda, e ali um corte de 2px vira degrau visível: as faixas que
+# atravessam esse brilho dissolvem em 8px. A faixa B mantém 2px porque
+# precisa cobrir o QR code, que começa a 1px da borda útil da etiqueta.
 PATCHES = (
-    dict(name="label-patch-a", x0=25, x1=317, y0=686, y1=727,
+    dict(name="label-patch-c", x0=26, x1=315, y0=615, y1=667, fx=8,
+         donor=(558, 610), above=(598, 614), below=(669, 684)),
+    dict(name="label-patch-a", x0=28, x1=313, y0=686, y1=727, fx=8,
          donor=(732, 773), above=(674, 686), below=(729, 741)),
-    dict(name="label-patch-b", x0=34, x1=306, y0=946, y1=1027,
+    dict(name="label-patch-d", x0=33, x1=308, y0=793, y1=873, fx=8,
+         donor=(866, 946), above=(778, 792), below=(876, 890)),
+    dict(name="label-patch-b", x0=34, x1=306, y0=946, y1=1027, fx=2,
          donor=(866, 947), above=(920, 944), below=None),
 )
 
@@ -324,11 +335,12 @@ def build_label_patches() -> dict:
         patch = np.clip(top[None] * (1 - t) + bot[None] * t + texture, 0, 255)
 
         rgba = np.dstack([patch, np.full((h, w), 255.0)])
-        for i in range(3):  # feather vertical
-            rgba[i, :, 3] = rgba[h - 1 - i, :, 3] = 255 * (i + 0.5) / 3
-        for i in range(2):  # feather horizontal
-            rgba[:, i, 3] *= (i + 0.5) / 2
-            rgba[:, w - 1 - i, 3] *= (i + 0.5) / 2
+        fv, fx = 5, int(p["fx"])
+        for i in range(fv):  # esfumado vertical
+            rgba[i, :, 3] = rgba[h - 1 - i, :, 3] = 255 * (i + 0.5) / fv
+        for i in range(fx):  # esfumado horizontal
+            rgba[:, i, 3] *= (i + 0.5) / fx
+            rgba[:, w - 1 - i, 3] *= (i + 0.5) / fx
 
         img = Image.fromarray(rgba.astype("uint8"), "RGBA")
         img.save(IMG_OUT / f"{p['name']}.png", optimize=True)
@@ -341,7 +353,25 @@ def build_label_patches() -> dict:
             "height": round(h / H * 100, 4),
         }
         print(f"retalho : {p['name']}  {w}x{h}px (png/webp/avif)")
+
+    build_silhueta()
     return out
+
+
+def build_silhueta() -> None:
+    """Silhueta da garrafa em alfa puro, para `mask-image` do reflexo de luz.
+
+    O reflexo precisa ser recortado pelo contorno do vidro. Usar o PNG da
+    garrafa como máscara baixaria 325 KB só para isso; a silhueta sozinha é
+    uma forma suave e comprime para uma fração disso.
+    """
+    src = Image.open(SRC / "garrafa-hero-recorte.png").convert("RGBA")
+    alfa = src.getchannel("A")
+    silhueta = Image.merge("RGBA", (alfa, alfa, alfa, alfa))
+    silhueta.save(IMG_OUT / "garrafa-silhueta.png", optimize=True)
+    silhueta.save(IMG_OUT / "garrafa-silhueta.webp", lossless=True, method=6)
+    kb = (IMG_OUT / "garrafa-silhueta.webp").stat().st_size / 1024
+    print(f"silhueta: garrafa-silhueta.webp {kb:.0f} KB (máscara do reflexo)")
 
 
 # --------------------------------------------------------------------------- #

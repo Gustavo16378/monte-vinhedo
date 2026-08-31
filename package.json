@@ -12,7 +12,9 @@
     "shots": "node scripts/shoot.mjs && node scripts/shoot.mjs --mobile",
     "checks": "node scripts/checks.mjs",
     "audit": "lighthouse http://localhost:4173/ --view --chrome-flags=\"--headless=new\"",
-    "telas": "node scripts/telas.mjs"
+    "telas": "node scripts/telas.mjs",
+    "abertura": "node scripts/abertura.mjs",
+    "profundidade": "node scripts/profundidade.mjs"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",

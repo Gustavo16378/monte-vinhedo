@@ -178,7 +178,66 @@
    por volta de 1,75:1 e é contínua — não há degrau em lugar nenhum.
 
    Os `clamp()` externos são só os limites de sanidade nos extremos. */
+/* Estado inicial de tudo que a abertura anima.
+   Fica no CSS, aplicado no JSX — não num `gsap.set()` depois do mount. Um
+   `set` só roda no primeiro layout effect, e até lá o browser já pintou um
+   frame com o hero inteiro visível: era esse o piscar entre preloader e hero.
+   O GSAP tira daqui com `autoAlpha`, que devolve `visibility` junto. */
+@utility oculto-na-abertura {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* As duas metades da legenda do hero.
+ *
+ * Mobile: uma linha só, centralizada, abaixo da base da garrafa — o
+ * `justify-center` do container basta.
+ *
+ * Desktop: cada metade é ancorada ao centro para que o VÃO fique centrado
+ * na garrafa, e não o grupo. Com `justify-center` quem centraliza é o
+ * conjunto; como "Vinhos finos de altitude" é bem mais larga que
+ * "desde 1987", a metade maior avançava 34px por cima do vidro. */
+.legenda-hero {
+  font-size: clamp(9px, 0.85vw, 12px);
+  font-weight: 400;
+  letter-spacing: 0.42em;
+  padding-left: 0.42em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--color-creme);
+  margin-inline: var(--legenda-vao);
+}
+
+@media (width >= 900px) {
+  .legenda-hero {
+    position: absolute;
+    top: 0;
+    margin-inline: 0;
+  }
+  .legenda-hero[data-legenda-esq] {
+    right: calc(50% + var(--legenda-vao));
+    text-align: right;
+  }
+  .legenda-hero[data-legenda-dir] {
+    left: calc(50% + var(--legenda-vao));
+    text-align: left;
+  }
+}
+
 @utility hero-escala {
+  /* largura da silhueta da garrafa ÷ altura dela, medido no PNG:
+     307px de vidro em 341px de imagem, e 341/1197 de proporção. É o que
+     permite abrir o vão da legenda a partir da altura da garrafa. */
+  --garrafa-larg: 0.2565;
+
+  /* Legenda partida em duas metades. No mobile não há vão: a garrafa ocupa
+     quase toda a largura, e ladeá-la deixaria ~67px por metade — não cabe.
+     Ali as duas metades voltam a ser uma linha só, logo abaixo da base da
+     garrafa (89svh), que continua cumprindo a regra: nenhum texto sobre o
+     vidro. No desktop elas abrem o vão da silhueta mais 48px de respiro. */
+  --legenda-vao: 7px;
+  --legenda-topo: 91.5svh;
+
   /* Sem teto: um teto em px faria o MONTE, que toca as bordas em todo lugar,
      virar uma palavra encolhida no meio da tela a partir de certa largura —
      e é justamente essa quebra de proporção que se quer evitar. Em 4K a
@@ -199,6 +258,8 @@
     --garrafa-topo: 10svh;
     --garrafa-altura: 85svh;
     --vinhedo-topo: 60svh;
+    --legenda-vao: calc(var(--garrafa-altura) * var(--garrafa-larg) / 2 + 48px);
+    --legenda-topo: calc(var(--vinhedo-topo) + var(--legenda-offset));
   }
 }
 

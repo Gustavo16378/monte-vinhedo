@@ -59,8 +59,9 @@ for (const [nome, w, h] of TELAS) {
       vh: innerHeight,
       monte: caixa('[data-hero-monte]'),
       vinhedo: caixa('[data-hero-vinhedo]'),
-      garrafa: caixa('[data-hero-garrafa]'),
-      legenda: caixa('[data-hero-legenda] span'),
+      garrafa: caixa('[data-garrafa-scroll]'),
+      legenda: caixa('[data-legenda-esq]'),
+      legDir: caixa('[data-legenda-dir]'),
       docW: document.documentElement.scrollWidth,
     };
   });
@@ -78,17 +79,33 @@ for (const [nome, w, h] of TELAS) {
   await page.close();
 }
 
-console.log('tela        vw×vh     MONTE l..r (sangra)     garrafa t..b      legenda l..r   overflow');
+console.log(
+  'tela        vw×vh      MONTE sangra   garrafa t..b     legenda: corta?  cruza garrafa?  overflow',
+);
 for (const m of relato) {
   const sangraM = m.monte ? `${-m.monte.l}|${m.monte.r - m.vw}` : '-';
-  const legOk = m.legenda ? (m.legenda.l >= 0 && m.legenda.r <= m.vw ? 'ok' : 'CORTA') : '-';
+  const corta = m.legenda && m.legDir ? (m.legenda.l >= 0 && m.legDir.r <= m.vw ? 'ok' : 'CORTA') : '-';
+  // a regra do briefing: nenhum texto por cima do vidro
+  const meia = m.garrafa ? (m.garrafa.r - m.garrafa.l) * 0.9003 * 0.5 : 0;
+  const cx = m.vw / 2;
+  // só é sobreposição de verdade se as caixas se cruzarem nos DOIS eixos:
+  // no mobile a legenda fica abaixo da base da garrafa, e ali cruzar em x
+  // não significa nada
+  const foraEmY = m.legenda && m.garrafa && (m.legenda.t >= m.garrafa.b || m.legenda.b <= m.garrafa.t);
+  const cruza =
+    m.legenda && m.legDir
+      ? foraEmY || (m.legenda.r <= cx - meia + 1 && m.legDir.l >= cx + meia - 1)
+        ? 'ok'
+        : 'CRUZA'
+      : '-';
   const garOk = m.garrafa ? (m.garrafa.b <= m.vh ? 'ok' : `+${m.garrafa.b - m.vh}`) : '-';
   console.log(
     m.nome.padEnd(11),
-    `${m.vw}x${m.vh}`.padEnd(10),
-    m.monte ? `${String(m.monte.l).padStart(5)}..${String(m.monte.r).padStart(5)} (${sangraM})`.padEnd(24) : ''.padEnd(24),
-    m.garrafa ? `${String(m.garrafa.t).padStart(4)}..${String(m.garrafa.b).padStart(5)} ${garOk}`.padEnd(18) : ''.padEnd(18),
-    legOk.padEnd(14),
+    `${m.vw}x${m.vh}`.padEnd(11),
+    sangraM.padEnd(14),
+    m.garrafa ? `${String(m.garrafa.t).padStart(4)}..${String(m.garrafa.b).padStart(5)} ${garOk}`.padEnd(17) : ''.padEnd(17),
+    corta.padEnd(16),
+    cruza.padEnd(15),
     m.docW > m.vw ? `SCROLL-X ${m.docW - m.vw}` : 'ok',
   );
 }

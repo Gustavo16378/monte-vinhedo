@@ -3,7 +3,7 @@ import { agendarLiberacao } from './motion/prontidao';
 import { useSmoothScroll } from './motion/useSmoothScroll';
 import { useBodyBackground } from './motion/useBodyBackground';
 import { useCapituloSpy } from './motion/capituloAtivo';
-import { Preloader, preloaderJaRodou } from './components/Preloader';
+import { preloaderJaRodou } from './components/Preloader';
 import { Lombada } from './components/Lombada';
 import { IndicadorCapitulo } from './components/IndicadorCapitulo';
 import { Hero } from './components/Hero';
@@ -22,30 +22,31 @@ import { Footer } from './components/Footer';
  * lendo o `data-bg` de cada uma (ver `useBodyBackground`).
  */
 export function App(): React.JSX.Element {
-  // lido de forma síncrona: se o preloader já rodou nesta sessão, o hero
-  // começa a animar no primeiro frame, sem esperar por nada
-  const [mostrarPreloader] = useState(() => !preloaderJaRodou());
-  const [heroLiberado, setHeroLiberado] = useState(!mostrarPreloader);
-  const liberarHero = useCallback(() => setHeroLiberado(true), []);
+  // lido de forma síncrona: se o preloader já rodou nesta sessão, a abertura
+  // pula direto para a entrada do hero
+  const [comPreloader] = useState(() => !preloaderJaRodou());
+  const [aberturaFim, setAberturaFim] = useState(false);
+  const fecharAbertura = useCallback(() => setAberturaFim(true), []);
 
   useSmoothScroll();
   useBodyBackground();
   useCapituloSpy();
 
-  // O preparo das seções de baixo (SplitText + ScrollTriggers) espera o hero
-  // entrar e a linha principal ficar ociosa. Nada disso está em cena antes
-  // disso, e adiantá-lo custa mais de um segundo de layout no celular.
-  useEffect(() => (heroLiberado ? agendarLiberacao() : undefined), [heroLiberado]);
+  // O preparo das seções de baixo (SplitText + ScrollTriggers) espera a
+  // abertura terminar e a linha principal ficar ociosa. Nada disso está em
+  // cena antes disso, e adiantá-lo custa mais de um segundo de layout no
+  // celular.
+  useEffect(() => (aberturaFim ? agendarLiberacao() : undefined), [aberturaFim]);
 
   return (
     <>
-      {mostrarPreloader && <Preloader onDone={liberarHero} />}
-
       <Lombada />
       <IndicadorCapitulo />
 
       <main>
-        <Hero pronto={heroLiberado} />
+        {/* o preloader é a primeira cena da abertura do hero, e por isso vive
+            dentro dele: as duas animações são uma timeline só */}
+        <Hero comPreloader={comPreloader} onAberturaFim={fecharAbertura} />
         <Manifesto />
         <Terroir />
         <Historia />

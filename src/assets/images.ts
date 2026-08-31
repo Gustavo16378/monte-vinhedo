@@ -159,11 +159,23 @@ export type ImageName = keyof typeof IMAGES;
 /** Caixas dos retalhos que cobrem o QR code e os textos "mockupfree"
  *  do rótulo, em % das dimensões intrínsecas da garrafa. */
 export const LABEL_PATCHES = {
+  "label-patch-c": {
+    "left": 7.6246,
+    "top": 51.3784,
+    "width": 84.7507,
+    "height": 4.3442
+  },
   "label-patch-a": {
-    "left": 7.3314,
+    "left": 8.2111,
     "top": 57.3099,
-    "width": 85.6305,
+    "width": 83.5777,
     "height": 3.4252
+  },
+  "label-patch-d": {
+    "left": 9.6774,
+    "top": 66.249,
+    "width": 80.6452,
+    "height": 6.6834
   },
   "label-patch-b": {
     "left": 9.9707,
