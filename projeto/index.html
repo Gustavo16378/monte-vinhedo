@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Monte Vinhedo — Vinhos finos de altitude</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+  <style>/* Zodiak */
+@font-face {
+  font-family: 'Zodiak';
+  src: url("assets/zodiak-400.woff2") format('woff2'),
+       url("assets/zodiak-400.woff") format('woff'),
+       url("assets/zodiak-400.ttf") format('truetype');
+  font-weight: 400;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Zodiak';
+  src: url("assets/zodiak-400-italic.woff2") format('woff2'),
+       url("assets/zodiak-400-italic.woff") format('woff'),
+       url("assets/zodiak-400-italic.ttf") format('truetype');
+  font-weight: 400;
+  font-display: swap;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Zodiak';
+  src: url("assets/zodiak-700.woff2") format('woff2'),
+       url("assets/zodiak-700.woff") format('woff'),
+       url("assets/zodiak-700.ttf") format('truetype');
+  font-weight: 700;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Zodiak';
+  src: url("assets/zodiak-700-italic.woff2") format('woff2'),
+       url("assets/zodiak-700-italic.woff") format('woff'),
+       url("assets/zodiak-700-italic.ttf") format('truetype');
+  font-weight: 700;
+  font-display: swap;
+  font-style: italic;
+}
+
+/* Switzer */
+@font-face {
+  font-family: 'Switzer';
+  src: url("assets/switzer-400.woff2") format('woff2'),
+       url("assets/switzer-400.woff") format('woff'),
+       url("assets/switzer-400.ttf") format('truetype');
+  font-weight: 400;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Switzer';
+  src: url("assets/switzer-500.woff2") format('woff2'),
+       url("assets/switzer-500.woff") format('woff'),
+       url("assets/switzer-500.ttf") format('truetype');
+  font-weight: 500;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Switzer';
+  src: url("assets/switzer-600.woff2") format('woff2'),
+       url("assets/switzer-600.woff") format('woff'),
+       url("assets/switzer-600.ttf") format('truetype');
+  font-weight: 600;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Switzer';
+  src: url("assets/switzer-700.woff2") format('woff2'),
+       url("assets/switzer-700.woff") format('woff'),
+       url("assets/switzer-700.ttf") format('truetype');
+  font-weight: 700;
+  font-display: swap;
+  font-style: normal;
+}
+
+
+</style>
+  <style>/* General Sans */
+@font-face {
+  font-family: 'General Sans';
+  src: url("assets/general-sans-300.woff2") format('woff2'),
+       url("assets/general-sans-300.woff") format('woff'),
+       url("assets/general-sans-300.ttf") format('truetype');
+  font-weight: 300;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'General Sans';
+  src: url("assets/general-sans-300-italic.woff2") format('woff2'),
+       url("assets/general-sans-300-italic.woff") format('woff'),
+       url("assets/general-sans-300-italic.ttf") format('truetype');
+  font-weight: 300;
+  font-display: swap;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'General Sans';
+  src: url("assets/general-sans-400.woff2") format('woff2'),
+       url("assets/general-sans-400.woff") format('woff'),
+       url("assets/general-sans-400.ttf") format('truetype');
+  font-weight: 400;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'General Sans';
+  src: url("assets/general-sans-400-italic.woff2") format('woff2'),
+       url("assets/general-sans-400-italic.woff") format('woff'),
+       url("assets/general-sans-400-italic.ttf") format('truetype');
+  font-weight: 400;
+  font-display: swap;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'General Sans';
+  src: url("assets/general-sans-500.woff2") format('woff2'),
+       url("assets/general-sans-500.woff") format('woff'),
+       url("assets/general-sans-500.ttf") format('truetype');
+  font-weight: 500;
+  font-display: swap;
+  font-style: normal;
+}
+
+
+</style>
+  <style>
+    html{scroll-behavior:smooth}
+    body{margin:0;background:#14080b;color:#f2ead8;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+    img{display:block}
+    a{color:#c9a45c;text-decoration:none}
+    a:hover{color:#722036}
+    ::selection{background:#722036;color:#f2ead8}
+  </style>
+
+
+
+</head>
+<body>
+
+
+  <div style="font-family:'General Sans',sans-serif;background:#14080b;color:#f2ead8">
+
+  <nav data-screen-label="Navegação — Lombada" style="position:fixed;top:0;left:0;bottom:0;z-index:100;width:clamp(48px,4vw,64px);pointer-events:none">
+    <a href="#topo" style="pointer-events:auto;position:absolute;top:26px;left:50%;transform:translateX(-50%) rotate(180deg);writing-mode:vertical-rl;font-size:10.5px;font-weight:500;letter-spacing:.42em;text-transform:uppercase;color:{{ spineInk }};white-space:nowrap;transition:color .3s ease;text-shadow:0 1px 6px rgba(20,8,11,.28)" style-hover="color:#c9a45c">Monte Vinhedo</a>
+    <div style="position:absolute;top:50%;left:0;right:0;transform:translateY(-50%);display:flex;flex-direction:column;align-items:center;gap:26px;pointer-events:auto;text-shadow:0 1px 6px rgba(20,8,11,.28)">
+      <a href="#manifesto" style="font-size:11px;letter-spacing:.1em;color:{{ c1 }};transition:color .3s ease" style-hover="color:#c9a45c">I</a>
+      <a href="#terroir" style="font-size:11px;letter-spacing:.1em;color:{{ c2 }};transition:color .3s ease" style-hover="color:#c9a45c">II</a>
+      <a href="#historia" style="font-size:11px;letter-spacing:.1em;color:{{ c3 }};transition:color .3s ease" style-hover="color:#c9a45c">III</a>
+      <a href="#vinhos" style="font-size:11px;letter-spacing:.1em;color:{{ c4 }};transition:color .3s ease" style-hover="color:#c9a45c">IV</a>
+      <a href="#visite" style="font-size:11px;letter-spacing:.1em;color:{{ c5 }};transition:color .3s ease" style-hover="color:#c9a45c">V</a>
+    </div>
+  </nav>
+
+  <header id="topo" data-spine="dark" data-screen-label="Hero" style="position:relative;min-height:100vh;overflow:hidden;background:#14080b">
+    <img src="assets/vinhedo-nevoa.jpg" alt="Vinhedo de altitude sob mar de névoa" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;filter:saturate(.75)">
+    
+      <div style="position:absolute;inset:0;z-index:2;background:linear-gradient(180deg,rgba(20,8,11,.8) 0%,rgba(114,32,54,.58) 46%,rgba(20,8,11,.94) 100%)"></div>
+    
+    
+      <div style="position:absolute;inset:0;z-index:2;background:linear-gradient(180deg,rgba(20,8,11,.58) 0%,rgba(114,32,54,.36) 46%,rgba(20,8,11,.82) 100%)"></div>
+    
+    <h1 aria-label="Monte Vinhedo" style="margin:0">
+      <span aria-hidden="true" style="position:absolute;z-index:3;top:12vh;left:50%;transform:translateX(-50%);font-family:'Zodiak',serif;font-weight:700;font-size:clamp(100px,27vw,520px);line-height:.78;letter-spacing:-.01em;color:#f2ead8;white-space:nowrap">MONTE</span>
+      <span aria-hidden="true" style="position:absolute;z-index:5;top:60vh;left:50%;transform:translateX(-50%);font-family:'Zodiak',serif;font-weight:400;font-size:clamp(44px,7.4vw,140px);line-height:.9;letter-spacing:.3em;padding-left:.3em;color:#f2ead8;white-space:nowrap">VINHEDO</span>
+    </h1>
+    <img src="assets/garrafa-hero-recorte.png" alt="Garrafa Monte Vinhedo" style="position:absolute;z-index:4;left:50%;top:10vh;transform:translateX(-50%);height:85vh;width:auto;filter:drop-shadow(0 48px 90px rgba(0,0,0,.68))">
+    <p style="position:absolute;z-index:5;top:calc(60vh + clamp(64px,9.4vw,176px));left:0;right:0;margin:0;display:flex;align-items:center;justify-content:center">
+      <span style="font-size:12px;letter-spacing:.5em;padding-left:.5em;text-transform:uppercase;color:#c9a45c;font-weight:400;white-space:nowrap">Vinhos finos de altitude · desde 1987</span>
+    </p>
+  </header>
+
+  <section id="manifesto" data-spine="cream" data-screen-label="Manifesto" style="background:#f2ead8;color:#14080b;padding:clamp(96px,15vh,180px) 24px clamp(84px,12vh,150px) clamp(64px,6vw,96px);display:flex;flex-direction:column;align-items:center;text-align:center;border-top:1px solid rgba(201,164,92,.45)">
+    <p style="margin:0 0 44px;font-size:11px;letter-spacing:.5em;padding-left:.5em;text-transform:uppercase;color:#722036;font-weight:400">I · Manifesto</p>
+    <h2 style="margin:0;font-family:'Zodiak',serif;font-weight:400;font-size:clamp(40px,5.8vw,96px);line-height:1.06;max-width:16ch;text-wrap:balance">Toda safra começa com <em style="color:#722036">paciência.</em></h2>
+    
+      <div style="margin:56px 0 0;display:flex;align-items:center;gap:22px;color:#c9a45c">
+        <i style="display:block;width:90px;height:1px;background:rgba(201,164,92,.55)"></i>
+        <span style="font-size:13px">✦</span>
+        <i style="display:block;width:90px;height:1px;background:rgba(201,164,92,.55)"></i>
+      </div>
+    
+    <figure style="margin:56px 0 0;width:min(780px,86vw)">
+      <img src="assets/rolhas.jpg" alt="Rolhas de safras antigas" loading="lazy" style="width:100%;height:120px;object-fit:cover;filter:sepia(.12) saturate(.92);border:1px solid rgba(114,32,54,.2)">
+      <figcaption style="margin-top:16px;font-size:10.5px;letter-spacing:.3em;text-transform:uppercase;color:rgba(20,8,11,.55)">Guardamos as rolhas de todas as safras desde 1987</figcaption>
+    </figure>
+  </section>
+
+  <section id="terroir" data-spine="dark" data-screen-label="O Terroir" style="background:#14080b;padding:clamp(96px,15vh,180px) 0 clamp(96px,15vh,180px) clamp(56px,5vw,84px);overflow:hidden">
+    <div>
+      <p style="margin:0 0 30px;font-size:11px;letter-spacing:.5em;text-transform:uppercase;color:#c9a45c;font-weight:400">II · O Terroir</p>
+      <h2 style="margin:0 0 34px;font-family:'Zodiak',serif;font-weight:400;font-size:clamp(64px,9vw,168px);line-height:.92;color:#f2ead8">O Terroir</h2>
+      <p style="margin:0;font-weight:300;font-size:16.5px;line-height:1.85;color:rgba(242,234,216,.72);max-width:46ch">Basalto vulcânico, noites frias e a névoa que sobe o vale ao amanhecer. Aqui a uva amadurece devagar — e é dessa espera que nasce a acidez viva dos nossos vinhos.</p>
+    </div>
+    <figure style="margin:clamp(44px,7vh,80px) 0 0;position:relative">
+      <img src="assets/vinhedo-nevoa.jpg" alt="Carta da propriedade: vinhedos sobre o mar de névoa" loading="lazy" style="width:100%;height:min(88vh,900px);object-fit:cover">
+      <div style="position:absolute;left:16%;top:60%">
+        <i style="position:absolute;left:-5px;top:-5px;width:10px;height:10px;border-radius:50%;background:#c9a45c;box-shadow:0 0 0 5px rgba(201,164,92,.22)"></i>
+        <i style="position:absolute;left:3px;top:-2px;width:110px;height:1px;background:rgba(201,164,92,.75);transform:rotate(-30deg);transform-origin:left center"></i>
+        <div style="position:absolute;left:96px;top:-110px;white-space:nowrap;text-shadow:0 1px 12px rgba(20,8,11,.75)">
+          <span style="display:block;font-family:'Zodiak',serif;font-size:clamp(26px,2.4vw,38px);color:#c9a45c;line-height:1">1.200 m</span>
+          <span style="display:block;margin-top:7px;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:rgba(242,234,216,.88)">de altitude na serra</span>
+        </div>
+      </div>
+      <div style="position:absolute;left:44%;top:36%">
+        <i style="position:absolute;left:-5px;top:-5px;width:10px;height:10px;border-radius:50%;background:#c9a45c;box-shadow:0 0 0 5px rgba(201,164,92,.22)"></i>
+        <i style="position:absolute;left:3px;top:0;width:90px;height:1px;background:rgba(201,164,92,.75);transform:rotate(28deg);transform-origin:left center"></i>
+        <div style="position:absolute;left:78px;top:48px;white-space:nowrap;text-shadow:0 1px 12px rgba(20,8,11,.75)">
+          <span style="display:block;font-family:'Zodiak',serif;font-size:clamp(26px,2.4vw,38px);color:#c9a45c;line-height:1">40 ha</span>
+          <span style="display:block;margin-top:7px;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:rgba(242,234,216,.88)">de vinhedos em basalto</span>
+        </div>
+      </div>
+      <div style="position:absolute;left:78%;top:64%">
+        <i style="position:absolute;left:-5px;top:-5px;width:10px;height:10px;border-radius:50%;background:#c9a45c;box-shadow:0 0 0 5px rgba(201,164,92,.22)"></i>
+        <i style="position:absolute;left:-3px;top:-2px;width:120px;height:1px;background:rgba(201,164,92,.75);transform:rotate(205deg);transform-origin:left center"></i>
+        <div style="position:absolute;right:106px;top:-108px;white-space:nowrap;text-align:right;text-shadow:0 1px 12px rgba(20,8,11,.75)">
+          <span style="display:block;font-family:'Zodiak',serif;font-size:clamp(26px,2.4vw,38px);color:#c9a45c;line-height:1">1987</span>
+          <span style="display:block;margin-top:7px;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:rgba(242,234,216,.88)">primeira safra plantada</span>
+        </div>
+      </div>
+      <figcaption style="padding:16px 0 0;font-size:10px;letter-spacing:.32em;text-transform:uppercase;color:rgba(201,164,92,.6)">Carta da propriedade · o vale ao amanhecer</figcaption>
+    </figure>
+  </section>
+
+  <section id="historia" data-spine="dark" data-screen-label="Nossa História" style="background:#14080b;padding:clamp(80px,12vh,150px) 0 clamp(80px,12vh,150px) clamp(56px,5vw,84px);overflow:hidden">
+    <div style="display:flex;flex-wrap:wrap;align-items:flex-start">
+      <figure style="margin:0;flex:0 1 min(480px,100%);min-width:min(320px,100%)">
+        <img src="assets/garrafas-empoeiradas.jpg" alt="Garrafas antigas com lacre de cera na adega" loading="lazy" style="width:100%;height:min(76vh,720px);object-fit:cover">
+        <figcaption style="padding:14px 0 0 clamp(20px,3vw,36px);font-size:10px;letter-spacing:.32em;text-transform:uppercase;color:rgba(201,164,92,.6)">Safras de guarda desde 1994</figcaption>
+      </figure>
+      <div style="flex:1.1 1 min(400px,100%);min-width:0;padding:clamp(36px,7vh,90px) clamp(28px,5vw,76px)">
+        <p style="margin:0 0 30px;font-size:11px;letter-spacing:.5em;text-transform:uppercase;color:#c9a45c;font-weight:400">III · Nossa História</p>
+        <h2 style="margin:0 0 36px;font-family:'Zodiak',serif;font-weight:400;font-size:clamp(46px,5.4vw,100px);line-height:1.02;color:#f2ead8;text-wrap:balance">Três gerações, um vale.</h2>
+        <p style="margin:0 0 26px;font-weight:300;font-size:16.5px;line-height:1.85;color:rgba(242,234,216,.72);max-width:46ch">Chegamos ao vale em 1987, quando ninguém acreditava em vinho fino no alto da serra. Plantamos assim mesmo — três hectares de Pinot Noir e uma teimosia de família.</p>
+        <p style="margin:0;font-weight:300;font-size:16.5px;line-height:1.85;color:rgba(242,234,216,.72);max-width:46ch">Hoje a terceira geração assina cada rótulo, e as garrafas descansam na adega o tempo que pedirem. Pressa, aqui, não entra.</p>
+      </div>
+      <figure style="margin:clamp(48px,16vh,200px) 0 0 auto;flex:0 1 min(440px,100%);min-width:min(300px,100%)">
+        <img src="assets/adega-barris.jpg" alt="Corredor de barris de carvalho na adega" loading="lazy" style="width:100%;height:min(46vh,440px);object-fit:cover">
+        <figcaption style="padding:14px clamp(20px,3vw,36px) 0 0;text-align:right;font-size:10px;letter-spacing:.32em;text-transform:uppercase;color:rgba(201,164,92,.6)">Adega subterrânea · 12 °C constantes</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section id="vinhos" data-spine="dark" data-screen-label="Os Vinhos" style="background:#14080b;padding:clamp(90px,14vh,170px) 24px 0 clamp(64px,6vw,96px);text-align:center">
+    
+      <p style="margin:0 0 26px;font-family:'Zodiak',serif;font-size:26px;color:#c9a45c">{ <span style="font-size:15px">✦</span> }</p>
+    
+    <p style="margin:0 0 26px;font-size:11px;letter-spacing:.5em;padding-left:.5em;text-transform:uppercase;color:#c9a45c;font-weight:400">IV · Os Vinhos</p>
+    <h2 style="margin:0;font-family:'Zodiak',serif;font-weight:400;font-size:clamp(44px,5vw,84px);line-height:1;color:#f2ead8">Os Vinhos</h2>
+    <p style="margin:22px 0 0;font-family:'Zodiak',serif;font-style:italic;font-size:clamp(17px,1.6vw,23px);color:rgba(242,234,216,.65)">três capítulos de uma mesma montanha</p>
+  </section>
+
+  <section data-spine="dark" data-screen-label="Capítulo I — Reserva Alma" style="background:#14080b;display:flex;flex-wrap:wrap;align-items:center;padding:clamp(70px,12vh,150px) 0 0;overflow:hidden">
+    <div style="flex:1 1 min(460px,100%);min-width:0;position:relative;z-index:2;padding:0 0 clamp(40px,8vh,90px) clamp(72px,7vw,110px)">
+      <p style="margin:0 0 28px;font-size:11px;letter-spacing:.5em;text-transform:uppercase;color:#c9a45c;font-weight:400">Capítulo I · Tinto · 2021</p>
+      <h3 style="margin:0 0 34px;font-family:'Zodiak',serif;font-weight:700;font-size:clamp(64px,9.5vw,180px);line-height:.92;color:#f2ead8;width:calc(100% + clamp(0px,calc(100vw - 880px),240px))">Reserva <em style="color:#c9a45c;font-weight:700">Alma</em></h3>
+      <p style="margin:0 0 34px;font-weight:300;font-size:15.5px;line-height:1.8;color:rgba(242,234,216,.72);max-width:38ch">Amora madura, cacau e pimenta-do-reino. Catorze meses em barrica de carvalho francês, engarrafado sem filtragem.</p>
+      <p style="margin:0;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:rgba(201,164,92,.75)">Pinot Noir · 1.200 m · guarda de 12 anos</p>
+      
+        <p style="margin:30px 0 0;font-family:'Zodiak',serif;font-style:italic;font-size:26px;color:#c9a45c">R$ 189</p>
+      
+    </div>
+    <figure style="margin:0;flex:1 1 min(420px,100%);min-width:0;z-index:1">
+      <img src="assets/garrafa-tinto-taca.jpg" alt="Garrafa do Reserva Alma com taça" loading="lazy" style="width:100%;height:min(96vh,860px);object-fit:cover">
+    </figure>
+  </section>
+
+  <section data-spine="dark" data-screen-label="Capítulo II — Rosé de Altitude" style="background:#14080b;display:flex;flex-wrap:wrap;align-items:center;padding:clamp(70px,12vh,150px) 0 clamp(70px,12vh,150px) clamp(56px,5vw,84px);overflow:hidden">
+    <figure style="margin:0;flex:1 1 min(420px,100%);min-width:0;z-index:1">
+      <img src="assets/rose-servindo.jpg" alt="Rosé de Altitude sendo servido" loading="lazy" style="width:100%;height:min(100vh,900px);object-fit:cover">
+    </figure>
+    <div style="flex:1 1 min(460px,100%);min-width:0;position:relative;z-index:2;padding:clamp(40px,8vh,90px) clamp(24px,7vw,110px) 0 clamp(24px,4vw,60px)">
+      <i style="display:block;width:64px;height:5px;background:#e59b7c;margin-bottom:34px"></i>
+      <p style="margin:0 0 28px;font-size:11px;letter-spacing:.5em;text-transform:uppercase;color:#c9a45c;font-weight:400">Capítulo II · Rosé · 2023</p>
+      <h3 style="margin:0 0 34px clamp(-260px,calc(880px - 100vw),0px);font-family:'Zodiak',serif;font-weight:700;font-size:clamp(56px,8vw,152px);line-height:.95;color:#f2ead8">Rosé de <em style="color:#e59b7c;font-weight:700">Altitude</em></h3>
+      <p style="margin:0 0 34px;font-weight:300;font-size:15.5px;line-height:1.8;color:rgba(242,234,216,.72);max-width:38ch">Morango fresco, pétalas e um final salino que pede mais um gole. Prensagem direta, seis meses sobre borras finas.</p>
+      <p style="margin:0;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:rgba(201,164,92,.75)">Pinot Noir · servir a 8 °C · 750 ml</p>
+      
+        <p style="margin:30px 0 0;font-family:'Zodiak',serif;font-style:italic;font-size:26px;color:#e59b7c">R$ 98</p>
+      
+    </div>
+  </section>
+
+  <section data-spine="cream" data-screen-label="Capítulo III — Branco das Neblinas" style="background:#f2ead8;color:#14080b;padding:clamp(100px,16vh,200px) 24px clamp(100px,16vh,200px) clamp(64px,6vw,96px);border-top:1px solid rgba(201,164,92,.45);text-align:center">
+    <div style="max-width:1080px;margin:0 auto">
+      <p style="margin:0 0 28px;font-size:11px;letter-spacing:.5em;padding-left:.5em;text-transform:uppercase;color:#722036;font-weight:400">Capítulo III · Branco · 2023</p>
+      <h3 style="margin:0;font-family:'Zodiak',serif;font-weight:400;font-size:clamp(52px,7.5vw,140px);line-height:.98;color:#14080b;text-wrap:balance">Branco das Neblinas</h3>
+      <p style="margin:24px 0 0;font-family:'Zodiak',serif;font-style:italic;font-size:clamp(18px,1.8vw,26px);color:#722036">colhido à noite, sob a névoa</p>
+      <figure style="margin:48px auto 0;padding:16px;border:1px solid rgba(114,32,54,.35);width:min(640px,78vw);background:#f2ead8">
+        <img src="assets/garrafa-por-do-sol.jpg" alt="Branco das Neblinas ao pôr do sol" loading="lazy" style="width:100%;height:min(64vh,620px);object-fit:cover">
+      </figure>
+      <p style="margin:44px 0 0;display:flex;align-items:center;justify-content:center;gap:24px;flex-wrap:wrap;font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:rgba(20,8,11,.68)">
+        <span>Flor branca</span><span style="color:#722036;font-size:11px">✦</span><span>Pêssego</span><span style="color:#722036;font-size:11px">✦</span><span>Pedra molhada</span>
+      </p>
+      <p style="margin:26px 0 0;font-family:'Zodiak',serif;font-style:italic;font-size:19px;color:rgba(20,8,11,.68)">Chardonnay de parcela única · 40 caixas por safra</p>
+      
+        <p style="margin:26px 0 0;font-family:'Zodiak',serif;font-style:italic;font-size:26px;color:#722036">R$ 129</p>
+      
+      
+        <div style="margin:56px auto 0;width:180px;display:flex;flex-direction:column;gap:4px">
+          <i style="display:block;height:1px;background:rgba(114,32,54,.4)"></i>
+          <i style="display:block;height:1px;background:rgba(114,32,54,.4)"></i>
+        </div>
+      
+    </div>
+  </section>
+
+  <section data-spine="dark" data-screen-label="Divisor — Intensidade" style="position:relative;height:100vh;min-height:620px;overflow:hidden;background:#0d0a0a">
+    <img src="assets/splash-taca.jpg" alt="" aria-hidden="true" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;filter:grayscale(.35) contrast(1.08)">
+    <h2 style="position:absolute;z-index:2;top:50%;left:50%;transform:translate(-50%,-54%);margin:0;font-family:'Zodiak',serif;font-weight:700;font-size:clamp(64px,13.2vw,265px);letter-spacing:.01em;color:#f2ead8;white-space:nowrap">INTENSIDADE</h2>
+    <img src="assets/splash-taca.jpg" alt="Taça com splash de vinho tinto" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:3;filter:grayscale(.35) contrast(1.08);-webkit-mask-image:linear-gradient(90deg,transparent 31%,#000 41%,#000 59%,transparent 69%);mask-image:linear-gradient(90deg,transparent 31%,#000 41%,#000 59%,transparent 69%)">
+  </section>
+
+  <section id="visite" data-spine="cream" data-screen-label="A Experiência — Visite" style="background:#f2ead8;color:#14080b;padding:clamp(100px,15vh,190px) clamp(24px,6vw,96px) clamp(100px,15vh,190px) clamp(72px,7vw,110px);border-top:1px solid rgba(201,164,92,.45)">
+    <div style="display:flex;flex-wrap:wrap;gap:clamp(44px,6vw,90px);align-items:flex-start">
+      <div style="flex:1.05 1 min(420px,100%);min-width:0">
+        <p style="margin:0 0 30px;font-size:11px;letter-spacing:.5em;text-transform:uppercase;color:#722036;font-weight:400">V · A Experiência</p>
+        <h2 style="margin:0 0 36px;font-family:'Zodiak',serif;font-weight:400;font-size:clamp(52px,6.5vw,120px);line-height:.98;color:#14080b;text-wrap:balance">Visite o vale</h2>
+        <p style="margin:0 0 44px;font-weight:300;font-size:17px;line-height:1.85;color:rgba(20,8,11,.75);max-width:44ch">Degustação guiada na adega, harmonização com queijos da serra e o pôr do sol mais alto de Santa Catarina. Saia com a taça — e fique para ver a névoa subir.</p>
+        <div style="display:flex;flex-direction:column">
+          <p style="margin:0;border-top:1px solid rgba(201,164,92,.5);padding:15px 0;font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:rgba(20,8,11,.68)">Sextas e sábados · 10h às 18h</p>
+          <p style="margin:0;border-top:1px solid rgba(201,164,92,.5);padding:15px 0;font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:rgba(20,8,11,.68)">Estrada do Contestado, km 18 · São Joaquim — SC</p>
+          <p style="margin:0;border-top:1px solid rgba(201,164,92,.5);border-bottom:1px solid rgba(201,164,92,.5);padding:15px 0;font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:rgba(20,8,11,.68)">Grupos de até 12 pessoas</p>
+        </div>
+        <a href="#visite" aria-label="Agende sua visita" style="position:relative;display:inline-flex;align-items:center;justify-content:center;width:184px;height:184px;margin-top:48px;border-radius:50%;background:radial-gradient(circle at 36% 30%,#8d2c46 0%,#722036 52%,#57162a 100%);box-shadow:inset 0 2px 7px rgba(242,234,216,.22),inset 0 -8px 16px rgba(20,8,11,.5),0 14px 32px rgba(114,32,54,.35);transition:transform .3s ease" style-hover="transform:rotate(-5deg) scale(1.04)">
+          <span style="font-family:'Zodiak',serif;font-weight:700;font-size:52px;color:#c9a45c;line-height:1">MV</span>
+          <svg sc-camel-view-box="0 0 184 184" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%">
+            <defs>
+              <path id="mv-selo-arc" d="M 92,21 a 71,71 0 1,1 -0.01,0"></path>
+            </defs>
+            <text style="font-family:'General Sans',sans-serif;font-size:10.5px;letter-spacing:4px;fill:#c9a45c"><textPath href="#mv-selo-arc">AGENDE SUA VISITA ✦ AGENDE SUA VISITA ✦</textPath></text>
+          </svg>
+        </a>
+      </div>
+      <div style="flex:1 1 min(420px,100%);min-width:min(300px,100%);position:relative;height:min(80vh,760px)">
+        <img src="assets/mesa-rustica.jpg" alt="Garrafa e taças em mesa rústica" loading="lazy" style="position:absolute;left:0;top:0;width:72%;height:60%;object-fit:cover;z-index:1">
+        <img src="assets/parede-garrafas.jpg" alt="Parede de garrafas do wine bar" loading="lazy" style="position:absolute;right:0;top:32%;width:44%;height:58%;object-fit:cover;z-index:2;border:8px solid #f2ead8;box-sizing:border-box"><img src="assets/vinhedo-dia.jpg" alt="Vinhedo verde à luz do dia" loading="lazy" style="position:absolute;left:8%;bottom:0;width:36%;height:32%;object-fit:cover;z-index:3;border:8px solid #f2ead8;box-sizing:border-box">
+        <p style="position:absolute;left:8%;bottom:-34px;margin:0;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:rgba(20,8,11,.55)">O vinhedo em janeiro, a cinco minutos da adega</p>
+      </div>
+    </div>
+  </section>
+
+  <footer data-spine="dark" data-screen-label="Footer — Contra-rótulo" style="background:#14080b;color:#f2ead8;padding:clamp(70px,11vh,130px) clamp(20px,5vw,80px) clamp(70px,11vh,130px) clamp(64px,6vw,92px)">
+    <div style="max-width:720px;margin:0 auto;border:1px solid rgba(201,164,92,.55);padding:clamp(44px,7vw,84px) clamp(24px,6vw,72px);text-align:center">
+      <p style="margin:0 0 24px;color:#c9a45c;font-size:13px">✦</p>
+      <p style="margin:0;font-family:'Zodiak',serif;font-weight:400;font-size:clamp(34px,4.2vw,62px);line-height:1;color:#f2ead8">Monte <em style="color:#c9a45c">Vinhedo</em></p>
+      <p style="margin:20px 0 0;font-size:10px;letter-spacing:.42em;padding-left:.42em;text-transform:uppercase;color:#c9a45c">Vinhos finos de altitude · desde 1987</p>
+      <i style="display:block;width:120px;height:1px;background:rgba(201,164,92,.4);margin:36px auto"></i>
+      <p style="margin:0;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:rgba(242,234,216,.6);line-height:2.2">Estrada do Contestado, km 18<br>São Joaquim — Santa Catarina · Brasil<br>contato@montevinhedo.com.br</p>
+      <div style="margin:34px 0 0;display:flex;justify-content:center;flex-wrap:wrap;gap:clamp(18px,2.6vw,34px);font-size:10.5px;letter-spacing:.28em;text-transform:uppercase">
+        <a href="#terroir" style="color:#c9a45c" style-hover="color:#f2ead8">II · Terroir</a>
+        <a href="#vinhos" style="color:#c9a45c" style-hover="color:#f2ead8">IV · Vinhos</a>
+        <a href="#visite" style="color:#c9a45c" style-hover="color:#f2ead8">V · Visite</a>
+        <a href="#topo" style="color:#c9a45c" style-hover="color:#f2ead8">@montevinhedo</a>
+      </div>
+      <i style="display:block;width:120px;height:1px;background:rgba(201,164,92,.4);margin:36px auto"></i>
+      <p style="margin:0;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:rgba(242,234,216,.42);line-height:2">750 ml · Vinho fino de altitude · Contém sulfitos<br>Aprecie com moderação · Venda proibida para menores de 18 anos</p>
+      <p style="margin:22px 0 0;font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:rgba(242,234,216,.3)">© 2026 Monte Vinhedo</p>
+    </div>
+  </footer>
+
+</div>
+
+
+
+
+
+</body></html>

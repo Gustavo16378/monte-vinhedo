@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://montevinhedo.com.br/sitemap.xml

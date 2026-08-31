@@ -1,0 +1,217 @@
+@import 'tailwindcss';
+@import 'lenis/dist/lenis.css';
+
+/* ------------------------------------------------------------------ fontes */
+/* Só as 7 faces que o layout usa. O export também traz Switzer e os itálicos
+   de General Sans, mas nenhum elemento os referencia — todo itálico é Zodiak. */
+
+@font-face {
+  font-family: 'Zodiak';
+  src: url('/fonts/zodiak-400.woff2') format('woff2'), url('/fonts/zodiak-400.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Zodiak';
+  src: url('/fonts/zodiak-400-italic.woff2') format('woff2'),
+    url('/fonts/zodiak-400-italic.woff') format('woff');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Zodiak';
+  src: url('/fonts/zodiak-700.woff2') format('woff2'), url('/fonts/zodiak-700.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Zodiak';
+  src: url('/fonts/zodiak-700-italic.woff2') format('woff2'),
+    url('/fonts/zodiak-700-italic.woff') format('woff');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'General Sans';
+  src: url('/fonts/general-sans-300.woff2') format('woff2'),
+    url('/fonts/general-sans-300.woff') format('woff');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'General Sans';
+  src: url('/fonts/general-sans-400.woff2') format('woff2'),
+    url('/fonts/general-sans-400.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'General Sans';
+  src: url('/fonts/general-sans-500.woff2') format('woff2'),
+    url('/fonts/general-sans-500.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ------------------------------------------------------------------ tokens */
+@theme {
+  --color-bordo: #14080b;
+  --color-dourado: #c9a45c;
+  --color-creme: #f2ead8;
+  --color-vinho: #722036;
+  /* acento exclusivo do capítulo do Rosé, vindo do export */
+  --color-rose: #e59b7c;
+
+  --font-display: 'Zodiak', ui-serif, Georgia, serif;
+  --font-sans: 'General Sans', ui-sans-serif, system-ui, sans-serif;
+
+  /* breakpoint único do site: acima disso o layout é o do export,
+     abaixo ele é recomposto (ver MOBILE nos componentes) */
+  --breakpoint-lg: 900px;
+}
+
+/* ------------------------------------------------------------------- base */
+@layer base {
+  html {
+    /* `clip` em vez de `hidden`: não cria contexto de rolagem e por isso não
+       briga com o pin do ScrollTrigger nem com a Lombada fixa. */
+    overflow-x: hidden;
+    overflow-x: clip;
+    /* nada de scroll-behavior:smooth — quem conduz o scroll é o Lenis */
+  }
+
+  body {
+    overflow-x: hidden;
+    overflow-x: clip;
+    background-color: var(--color-bordo);
+    color: var(--color-creme);
+    font-family: var(--font-sans);
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background: var(--color-vinho);
+    color: var(--color-creme);
+  }
+
+  img {
+    display: block;
+  }
+
+  /* o <picture> não deve criar caixa nenhuma: quem posiciona é o <img> */
+  picture {
+    display: contents;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-dourado);
+    outline-offset: 3px;
+  }
+}
+
+/* -------------------------------------------------------------- utilitários */
+
+/* "I · Manifesto", "Capítulo II · Rosé · 2023" — o label de abertura de seção */
+@utility eyebrow {
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+}
+
+/* variante centralizada: compensa opticamente o tracking da última letra */
+@utility eyebrow-center {
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.5em;
+  padding-left: 0.5em;
+  text-transform: uppercase;
+}
+
+/* parágrafo corrido das seções escuras e claras */
+@utility corpo {
+  font-weight: 300;
+  font-size: 16.5px;
+  line-height: 1.85;
+  max-width: 46ch;
+}
+
+/* legenda de figura */
+@utility legenda {
+  font-size: 10px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+}
+
+/* Altura do hero. `svh` em vez de `vh` para que a barra de URL do mobile
+   apareça e suma sem reposicionar as camadas do sanduíche. */
+@utility hero-altura {
+  min-height: 100vh;
+  min-height: 100svh;
+}
+
+/* ─────────────────────────────────────────────────────── escala do hero ──
+   O sanduíche do hero tem que se sustentar em qualquer proporção de tela,
+   não só nas duas que a gente costuma testar. Duas medidas do Zodiak
+   sustentam a conta:
+
+     "MONTE"   em 700, tracking -.01em ....... 3,97em de largura
+     "VINHEDO" em 400, tracking  .3em ........ 7,09em de largura
+
+   Daí sai o corpo que faz cada palavra ocupar a largura desejada — por
+   exemplo, 102vw (tocando as duas bordas, 1vw de sangria de cada lado)
+   pede 102/3,97 = 25,7vw.
+
+   O segundo termo, em svh, é o que faltava: sozinho, o vw fazia o MONTE
+   crescer sem limite numa tela larga e baixa até engolir a garrafa, que é
+   medida em altura. Com `min()`, a largura manda nas telas altas (celular)
+   e a altura manda nas baixas (notebook 16:9, ultrawide). A troca acontece
+   por volta de 1,75:1 e é contínua — não há degrau em lugar nenhum.
+
+   Os `clamp()` externos são só os limites de sanidade nos extremos. */
+@utility hero-escala {
+  /* Sem teto: um teto em px faria o MONTE, que toca as bordas em todo lugar,
+     virar uma palavra encolhida no meio da tela a partir de certa largura —
+     e é justamente essa quebra de proporção que se quer evitar. Em 4K a
+     palavra é grande porque a tela é grande; a composição é a mesma. */
+  --monte: max(64px, min(25.7vw, 45svh));
+  --vinhedo: clamp(34px, min(12.97vw, 12svh), 150px);
+  --legenda-offset: clamp(52px, min(17vw, 11svh), 96px);
+  --garrafa-topo: 15svh;
+  --garrafa-altura: 74svh;
+  --monte-topo: 12svh;
+  --vinhedo-topo: 58svh;
+
+  @media (width >= 900px) {
+    /* No desktop o VINHEDO recua para ~52vw de largura (7,33vw de corpo),
+       que é a proporção do export; no mobile ele ocupa ~92vw. */
+    --vinhedo: clamp(38px, min(7.33vw, 12svh), 150px);
+    --legenda-offset: clamp(56px, min(9.4vw, 13svh), 176px);
+    --garrafa-topo: 10svh;
+    --garrafa-altura: 85svh;
+    --vinhedo-topo: 60svh;
+  }
+}
+
+/* -------------------------------------------------------------- movimento */
+
+/* Toda entrada do site é `gsap.from()`: o estado final já está no HTML e a
+   animação parte de fora dele. Se o JS falhar ou não rodar, a página continua
+   legível e completa — nada aqui esconde conteúdo à espera de animação.
+
+   Parallax, pin e scrub são desligados no JS via `gsap.matchMedia()` sob
+   `prefers-reduced-motion: reduce`; restam só os fades. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}

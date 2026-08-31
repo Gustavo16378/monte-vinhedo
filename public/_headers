@@ -1,0 +1,19 @@
+# Cloudflare Pages — cabeçalhos por rota.
+
+# Assets com hash no nome (Vite): imutáveis.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Fontes e derivadas de imagem: nome estável, mas o conteúdo só muda quando
+# scripts/prepare-assets.py roda de novo. Um ano com revalidação silenciosa.
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+  Access-Control-Allow-Origin: *
+
+/img/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(), microphone=(), camera=(), interest-cohort=()

@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#14080b" />
+
+    <title>Monte Vinhedo — Vinhos finos de altitude</title>
+    <meta
+      name="description"
+      content="Vinícola de altitude em São Joaquim, Santa Catarina. A 1.200 m, sobre basalto vulcânico e mar de névoa, três gerações fazem vinhos finos de guarda desde 1987."
+    />
+    <link rel="canonical" href="https://montevinhedo.com.br/" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Monte Vinhedo" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:url" content="https://montevinhedo.com.br/" />
+    <meta property="og:title" content="Monte Vinhedo — Vinhos finos de altitude" />
+    <meta
+      property="og:description"
+      content="Vinícola de altitude em São Joaquim, Santa Catarina. A 1.200 m, sobre basalto vulcânico e mar de névoa, três gerações fazem vinhos finos de guarda desde 1987."
+    />
+    <meta property="og:image" content="https://montevinhedo.com.br/og.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta
+      property="og:image:alt"
+      content="Garrafa Monte Vinhedo entre as palavras MONTE e VINHEDO, sobre o vinhedo ao amanhecer"
+    />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Monte Vinhedo — Vinhos finos de altitude" />
+    <meta
+      name="twitter:description"
+      content="Vinícola de altitude em São Joaquim, Santa Catarina. Vinhos finos de guarda desde 1987."
+    />
+    <meta name="twitter:image" content="https://montevinhedo.com.br/og.jpg" />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="mask-icon" href="/favicon.svg" color="#c9a45c" />
+
+    <!-- Fontes da primeira dobra: MONTE/VINHEDO (Zodiak 700/400) e os labels (General Sans 400) -->
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/zodiak-700.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/zodiak-400.woff2" crossorigin />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="/fonts/general-sans-400.woff2"
+      crossorigin
+    />
+
+    <!--
+      As duas camadas do hero são pintadas pelo React, então o navegador só as
+      descobriria depois de baixar e executar o bundle. Estes preloads põem o
+      fundo e a garrafa — o elemento de LCP — na fila junto com o HTML.
+      `type` garante que só o formato suportado seja baixado.
+    -->
+    <link
+      rel="preload"
+      as="image"
+      type="image/avif"
+      href="/img/garrafa-hero-recorte-341.avif"
+      fetchpriority="high"
+    />
+    <link
+      rel="preload"
+      as="image"
+      type="image/avif"
+      imagesrcset="
+        /img/vinhedo-nevoa-640.avif   640w,
+        /img/vinhedo-nevoa-768.avif   768w,
+        /img/vinhedo-nevoa-1024.avif 1024w,
+        /img/vinhedo-nevoa-1280.avif 1280w,
+        /img/vinhedo-nevoa-1440.avif 1440w,
+        /img/vinhedo-nevoa-1600.avif 1600w,
+        /img/vinhedo-nevoa-1920.avif 1920w,
+        /img/vinhedo-nevoa-2000.avif 2000w"
+      imagesizes="100vw"
+    />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Winery",
+        "name": "Monte Vinhedo",
+        "description": "Vinícola boutique de altitude em São Joaquim, Santa Catarina. Vinhos finos de guarda desde 1987.",
+        "url": "https://montevinhedo.com.br/",
+        "image": "https://montevinhedo.com.br/og.jpg",
+        "email": "contato@montevinhedo.com.br",
+        "foundingDate": "1987",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Estrada do Contestado, km 18",
+          "addressLocality": "São Joaquim",
+          "addressRegion": "SC",
+          "addressCountry": "BR"
+        },
+        "openingHoursSpecification": {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Friday", "Saturday"],
+          "opens": "10:00",
+          "closes": "18:00"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
