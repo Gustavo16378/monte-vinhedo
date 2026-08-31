@@ -9,6 +9,7 @@
     "preview": "vite preview --port 4173 --strictPort",
     "typecheck": "tsc -b",
     "assets": "python scripts/prepare-assets.py",
+    "og": "node scripts/og.mjs",
     "shots": "node scripts/shoot.mjs && node scripts/shoot.mjs --mobile",
     "checks": "node scripts/checks.mjs",
     "audit": "lighthouse http://localhost:4173/ --view --chrome-flags=\"--headless=new\"",
