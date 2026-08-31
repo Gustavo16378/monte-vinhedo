@@ -131,19 +131,27 @@ export function DivisorIntensidade(): React.JSX.Element {
         //
         // Deliberadamente SEM `ScrollTrigger.normalizeScroll(true)`: ele
         // sequestra wheel e touch para conduzir a rolagem por conta própria,
-        // e o Lenis desta página já faz exatamente isso. Ligar os dois é ter
-        // dois donos do mesmo gesto — o efeito colateral que o próprio
-        // briefing manda escopar. O problema que o normalizeScroll resolveria
-        // (a barra de URL do Android saltando o pin) já está resolvido acima
-        // pelo `pinType: 'transform'`, que é imune ao redimensionamento do
-        // viewport por não depender de `position: fixed`.
+        // e o Lenis desta página faz exatamente isso desde que ganhou
+        // `syncTouch` (ver `useSmoothScroll`). Um gesto, um dono — ligar os
+        // dois é a receita para o tranco que este arquivo existe para evitar.
         gsap.set(fotos, { willChange: 'transform' });
         montar({
           trigger: el,
           start: 'top top',
-          end: '+=90%',
+          // Fim em PIXELS, resolvido no refresh, e não em '+=90%'.
+          // A porcentagem é relativa à altura do viewport, que no Android
+          // muda quando a barra de URL recolhe: o fim do pin se mexia
+          // debaixo do gesto e o scrub dava um salto para reencontrar a
+          // posição. Congelado em px no último refresh, o trecho pinado tem
+          // sempre o mesmo comprimento do começo ao fim da rolagem.
+          end: () => `+=${window.innerHeight * 0.9}`,
+          invalidateOnRefresh: true,
           pin: true,
           pinType: 'transform',
+          // Prepara o pin um tique antes de a seção encostar no topo. Sem
+          // isso, em rolagem rápida o navegador entrega o scroll já passado
+          // do ponto de entrada e o pin nasce com um flash de deslocamento.
+          anticipatePin: 1,
           scrub: true,
           refreshPriority: 1,
         });
