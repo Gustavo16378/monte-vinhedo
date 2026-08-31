@@ -25,6 +25,10 @@
       content="Uma degustação digital. Vinhos de altitude nascidos a 1.200 metros, sob a névoa de São Joaquim."
     />
     <meta property="og:image" content="https://monte-vinhedo.pages.dev/og.jpg" />
+    <!-- Redundante com o og:image acima, que já é https. Está aqui porque
+         parte do crawler da Meta (o mesmo que serve o WhatsApp) ainda
+         procura o secure_url primeiro, e sai barato garantir. -->
+    <meta property="og:image:secure_url" content="https://monte-vinhedo.pages.dev/og.jpg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:image:type" content="image/jpeg" />
