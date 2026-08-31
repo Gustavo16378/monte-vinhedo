@@ -20,9 +20,22 @@ const VEU_A =
 const VEU_B =
   'linear-gradient(180deg,rgba(20,8,11,.58) 0%,rgba(114,32,54,.36) 46%,rgba(20,8,11,.82) 100%)';
 
-/** Faixa de luz que corre no vidro. Pico de 18%, ~40% da largura da garrafa. */
+/**
+ * Faixa de luz que corre no vidro.
+ *
+ * Era um feixe de 40% da largura com pico de 18% em `screen`, e isso
+ * chapava o vidro: a garrafa lia como plástico injetado, não como vidro
+ * escuro. Agora é um sussurro — 22% de largura, pico de 7%, difundido em
+ * `blur(6px)` e composto em `overlay`.
+ *
+ * `overlay` em vez de `screen` é o que preserva a profundidade de cor: o
+ * `screen` clareia tudo que toca e some com o pigmento do vinho, enquanto o
+ * `overlay` só levanta o que já era claro e respeita o que já era escuro. O
+ * PNG da garrafa já traz o sombreamento certo — o reflexo não tem que
+ * reacender o vidro, só denunciar que ele é vidro quando a peça se move.
+ */
 const REFLEXO =
-  'linear-gradient(135deg,transparent 30%,rgba(255,241,208,.18) 44%,rgba(255,248,228,.09) 54%,transparent 70%)';
+  'linear-gradient(135deg,transparent 39%,rgba(255,241,208,.07) 47%,rgba(255,248,228,.035) 53%,transparent 61%)';
 
 /**
  * Folha dourada do rótulo.
@@ -221,30 +234,41 @@ export function Hero({ comPreloader, onAberturaFim }: HeroProps): React.JSX.Elem
       id="topo"
       ref={raiz}
       data-bg="#14080b"
-      className="hero-altura hero-escala relative overflow-hidden"
+      className="hero-altura hero-escala relative grid place-items-center overflow-clip"
+      style={{ paddingLeft: 'var(--lombada-w)' }}
     >
       {/* A cortina vai para o <body>: dentro do palco, o `perspective` a
           tornaria posicionada em relação ao palco e não à tela. */}
       {cortinaViva && createPortal(<Cortina refCortina={cortina} />, document.body)}
 
-      <div data-palco className="absolute inset-0" style={{ perspective: '1200px' }}>
-        {/* fundo — três wrappers, uma transform cada */}
-        <div data-fundo-scroll className="oculto-na-abertura absolute inset-0 z-[1]">
-          <div data-fundo-deriva className="absolute inset-[-4%]">
-            <div data-fundo-mouse className="h-full w-full">
-              <Picture
-                name="vinhedo-nevoa"
-                priority
-                sizes="108vw"
-                className="h-full w-full object-cover [filter:saturate(.75)]"
-              />
-            </div>
+      {/* Fundo e véus vão de borda a borda, POR BAIXO da Lombada: são
+          ambiente, não composição. Ficam fora do palco de propósito — o
+          padding que reserva a faixa da Lombada encolheria a foto junto. */}
+      <div data-fundo-scroll className="oculto-na-abertura absolute inset-0 z-[1]">
+        <div data-fundo-deriva className="absolute inset-[-4%]">
+          <div data-fundo-mouse className="h-full w-full">
+            <Picture
+              name="vinhedo-nevoa"
+              priority
+              sizes="108vw"
+              className="h-full w-full object-cover [filter:saturate(.75)]"
+            />
           </div>
         </div>
+      </div>
 
-        <div aria-hidden="true" className="absolute inset-0 z-[2]" style={{ background: VEU_A }} />
-        <div aria-hidden="true" className="absolute inset-0 z-[2]" style={{ background: VEU_B }} />
+      <div aria-hidden="true" className="absolute inset-0 z-[2]" style={{ background: VEU_A }} />
+      <div aria-hidden="true" className="absolute inset-0 z-[2]" style={{ background: VEU_B }} />
 
+      {/* Palco: o item do grid, e por isso já nasce dentro da área útil —
+          à direita da faixa da Lombada. Daqui para baixo, todo `left: 50%`
+          centra na COMPOSIÇÃO e não na tela, e é isso que mantém a Lombada
+          permanentemente fora dela, em qualquer resolução. */}
+      <div
+        data-palco
+        className="relative z-[3] h-full w-full"
+        style={{ perspective: '1200px' }}
+      >
         {/* sombra de contato: fica no chão, não gira com a garrafa */}
         <div
           data-sombra
@@ -364,7 +388,7 @@ export function Hero({ comPreloader, onAberturaFim }: HeroProps): React.JSX.Elem
               aria-hidden="true"
               className="pointer-events-none absolute inset-0 overflow-hidden"
               style={{
-                mixBlendMode: 'screen',
+                mixBlendMode: 'overlay',
                 WebkitMaskImage: 'url(/img/garrafa-silhueta.webp)',
                 maskImage: 'url(/img/garrafa-silhueta.webp)',
                 WebkitMaskSize: '100% 100%',
@@ -373,7 +397,13 @@ export function Hero({ comPreloader, onAberturaFim }: HeroProps): React.JSX.Elem
                 maskRepeat: 'no-repeat',
               }}
             >
-              <div data-reflexo className="absolute inset-0" style={{ background: REFLEXO }} />
+              {/* o blur mora no filho, nunca no elemento mascarado: borrar a
+                  máscara junto derramaria a luz para fora do vidro */}
+              <div
+                data-reflexo
+                className="absolute inset-0"
+                style={{ background: REFLEXO, filter: 'blur(6px)' }}
+              />
             </div>
           </div>
         </div>

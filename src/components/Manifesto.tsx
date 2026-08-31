@@ -80,42 +80,56 @@ export function Manifesto(): React.JSX.Element {
       id="manifesto"
       ref={raiz}
       data-bg="#f2ead8"
-      className="flex flex-col items-center border-t border-dourado/45 px-[24px] pt-[clamp(96px,15vh,180px)] pb-[clamp(84px,12vh,150px)] pl-[clamp(64px,6vw,96px)] text-center text-bordo"
+      className="border-t border-dourado/45 pt-[clamp(96px,15vh,180px)] pb-[clamp(84px,12vh,150px)] text-center text-bordo"
+      /* Padding SIMÉTRICO — era daqui que vinha o descentramento. A seção
+         tinha 24px à direita e até 96px à esquerda (a folga da Lombada), e
+         com isso o eixo do conteúdo nascia 36px à direita do eixo da tela:
+         a frase parecia torta mesmo estando "centralizada" na sua caixa.
+         Reservando a MESMA faixa dos dois lados, o eixo do bloco volta a
+         ser o eixo do viewport. Uma regra só serve os dois breakpoints:
+         `--lombada-w` é 0 no mobile, então ali sobram os 24px de sempre. */
+      style={{ paddingInline: 'calc(var(--lombada-w) + 24px)' }}
     >
-      <p data-manifesto-eyebrow className="eyebrow-center m-0 mb-[44px] text-vinho">
-        I · Manifesto
-      </p>
+      <div className="mx-auto flex w-full max-w-[860px] flex-col items-center">
+        {/* No mobile este label é a segunda vez que "I · Manifesto" aparece
+            na tela — o <IndicadorCapitulo /> já o mostra fixo no topo. Fica
+            só o indicador; do lg para cima não há indicador, e o label
+            volta a ser a abertura da seção. */}
+        <p data-manifesto-eyebrow className="eyebrow-center m-0 mb-[44px] hidden text-vinho lg:block">
+          I · Manifesto
+        </p>
 
-      <h2
-        data-manifesto-frase
-        className="m-0 max-w-[16ch] font-display text-[clamp(40px,5.8vw,96px)] leading-[1.06] font-normal [text-wrap:balance]"
-      >
-        Toda safra começa com <em className="text-vinho">paciência.</em>
-      </h2>
-
-      <div
-        data-manifesto-ornamento
-        aria-hidden="true"
-        className="mt-[56px] flex items-center gap-[22px] text-dourado"
-      >
-        <i className="block h-px w-[90px] bg-dourado/55" />
-        <span className="text-[13px]">✦</span>
-        <i className="block h-px w-[90px] bg-dourado/55" />
-      </div>
-
-      <figure className="mt-[56px] mb-0 w-[min(780px,86vw)]">
-        <Picture
-          name="rolhas"
-          data-manifesto-rolhas
-          className="h-[120px] w-full border border-vinho/20 object-cover [filter:sepia(.12)_saturate(.92)]"
-        />
-        <figcaption
-          data-manifesto-legenda
-          className="mt-[16px] text-[10.5px] tracking-[.3em] text-bordo/55 uppercase"
+        <h2
+          data-manifesto-frase
+          className="m-0 max-w-[16ch] font-display text-[clamp(40px,5.8vw,96px)] leading-[1.06] font-normal [text-wrap:balance]"
         >
-          Guardamos as rolhas de todas as safras desde 1987
-        </figcaption>
-      </figure>
+          Toda safra começa com <em className="text-vinho">paciência.</em>
+        </h2>
+
+        <div
+          data-manifesto-ornamento
+          aria-hidden="true"
+          className="mt-[56px] flex items-center gap-[22px] text-dourado"
+        >
+          <i className="block h-px w-[90px] bg-dourado/55" />
+          <span className="text-[13px]">✦</span>
+          <i className="block h-px w-[90px] bg-dourado/55" />
+        </div>
+
+        <figure className="mt-[56px] mb-0 w-full max-w-[780px]">
+          <Picture
+            name="rolhas"
+            data-manifesto-rolhas
+            className="h-[120px] w-full border border-vinho/20 object-cover [filter:sepia(.12)_saturate(.92)]"
+          />
+          <figcaption
+            data-manifesto-legenda
+            className="mt-[16px] text-[10.5px] tracking-[.3em] text-bordo/55 uppercase"
+          >
+            Guardamos as rolhas de todas as safras desde 1987
+          </figcaption>
+        </figure>
+      </div>
     </section>
   );
 }

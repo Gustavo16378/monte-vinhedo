@@ -9,19 +9,35 @@ import { Picture } from './Picture';
  *
  * O export usava preto cheio no miolo (41%–59%), e ali o "SI" de INTENSIDADE
  * sumia por completo — a palavra virava "INTEN DADE". As paradas centrais
- * agora param em ~0.84 de alfa: a taça continua na frente, mas as letras
+ * agora param em ~0.86 de alfa: a taça continua na frente, mas as letras
  * atravessam o vidro como um fantasma, que é o que o vidro faz de verdade.
  * As bordas seguem em transparente total, então o recorte continua invisível.
+ *
+ * A faixa é larga (8%–88%) porque agora é medida sobre a CHAPA da foto, e
+ * não sobre a tela inteira. Ser generosa não custa nada: fora da silhueta
+ * da taça as duas cópias são a mesma imagem no mesmo lugar, então onde não
+ * há vidro a máscara é literalmente invisível.
  */
 const MASCARA = [
   'linear-gradient(90deg',
-  'transparent 30%',
-  'rgba(0,0,0,.78) 39%',
-  'rgba(0,0,0,.84) 46%',
-  'rgba(0,0,0,.84) 54%',
-  'rgba(0,0,0,.78) 61%',
-  'transparent 70%)',
+  'transparent 8%',
+  'rgba(0,0,0,.80) 18%',
+  'rgba(0,0,0,.86) 35%',
+  'rgba(0,0,0,.86) 62%',
+  'rgba(0,0,0,.80) 78%',
+  'transparent 88%)',
 ].join(',');
+
+/**
+ * Dissolve as laterais da chapa da foto no fundo da seção.
+ *
+ * A foto deixou de ser full-bleed (ver `--taca-larg` abaixo) e por isso
+ * agora tem bordas verticais. Sem este esfumado elas leriam como um
+ * retângulo colado; com ele, a vinheta da própria foto continua no fundo
+ * da seção e não há costura.
+ */
+const ESFUMADO =
+  'linear-gradient(90deg,transparent 0%,#000 13%,#000 87%,transparent 100%)';
 
 /**
  * Divisor splash — MOTION.md §7.
@@ -70,7 +86,12 @@ export function DivisorIntensidade(): React.JSX.Element {
                 stagger: { amount: 1.8 },
               },
               0,
-            ).fromTo(fotos, { scale: 1 }, { scale: 1.06, ease: 'none', duration: 3 }, 0);
+            )
+              // de 1.06 para 1.03: o movimento é de ASSENTAR, não de
+              // aproximar. Ampliar durante o pin era o que empurrava o
+              // enquadramento para dentro do bojo bem no momento em que a
+              // palavra pedia a taça inteira em cena.
+              .fromTo(fotos, { scale: 1.06 }, { scale: 1.03, ease: 'none', duration: 3 }, 0);
             return tl;
           },
         });
@@ -97,13 +118,39 @@ export function DivisorIntensidade(): React.JSX.Element {
       });
 
       mm.add('(max-width: 899px) and (prefers-reduced-motion: no-preference)', () => {
-        // A janela do scrub fecha em 'top 12%', não na saída da seção: assim a
-        // palavra termina de entrar quando o divisor ocupa a tela inteira e
-        // fica legível por todo o resto da rolagem, em vez de só num piscar.
-        montar({ trigger: el, start: 'top 88%', end: 'top 12%', scrub: true });
+        // O mobile ganha o MESMO pin do desktop: a seção trava e as letras
+        // entram conforme a rolagem. Antes aqui só havia scrub solto, e a
+        // palavra passava num piscar.
+        //
+        // `pinType: 'transform'` é o que torna isso viável no celular. O pin
+        // padrão usa `position: fixed`, e no Chrome do Android a barra de URL
+        // que aparece e some redimensiona o viewport — o elemento fixo salta a
+        // cada mudança. Com `transform` o pin é só um deslocamento, imune a
+        // isso, e ainda é o modo que combina com o Lenis, que também conduz a
+        // página por transform.
+        //
+        // Deliberadamente SEM `ScrollTrigger.normalizeScroll(true)`: ele
+        // sequestra wheel e touch para conduzir a rolagem por conta própria,
+        // e o Lenis desta página já faz exatamente isso. Ligar os dois é ter
+        // dois donos do mesmo gesto — o efeito colateral que o próprio
+        // briefing manda escopar. O problema que o normalizeScroll resolveria
+        // (a barra de URL do Android saltando o pin) já está resolvido acima
+        // pelo `pinType: 'transform'`, que é imune ao redimensionamento do
+        // viewport por não depender de `position: fixed`.
+        gsap.set(fotos, { willChange: 'transform' });
+        montar({
+          trigger: el,
+          start: 'top top',
+          end: '+=90%',
+          pin: true,
+          pinType: 'transform',
+          scrub: true,
+          refreshPriority: 1,
+        });
         return () => {
           split?.revert();
           split = null;
+          gsap.set(fotos, { willChange: 'auto' });
         };
       });
 
@@ -131,12 +178,34 @@ export function DivisorIntensidade(): React.JSX.Element {
       data-bg="#14080b"
       aria-label="Intensidade"
       className="relative h-[100svh] min-h-[620px] overflow-hidden"
+      style={{
+        /* Largura da chapa da foto, e é ela que define o zoom.
+           A taça (da borda ao pé) ocupa 58,5% da altura do JPG, que é
+           1335x2000. Com `object-fit: cover` numa caixa mais estreita que
+           a proporção da foto, quem manda é a largura: a altura exibida
+           vira 1,4981 × largura, e a taça, 0,8764 × largura. Igualando a
+           80% da altura da tela sai largura = 91,3svh.
+
+           Antes a caixa era 100vw: numa tela 16:9 isso ampliava a foto em
+           1,44× e só o bojo cabia em cena — a taça deixava de ser uma taça
+           e virava uma mancha vermelha. No mobile o `min()` devolve o
+           full-bleed, que ali é o enquadramento certo. */
+        ['--taca-larg' as string]: 'min(91.3svh, 100vw)',
+        background: 'radial-gradient(120% 100% at 50% 50%,#181416 0%,#14080b 72%)',
+      }}
     >
       <Picture
         name="splash-taca"
         alt=""
         data-divisor-foto
-        className="absolute inset-0 z-[1] h-full w-full object-cover [filter:grayscale(.35)_contrast(1.08)]"
+        sizes="min(91.3svh, 100vw)"
+        className="absolute top-0 left-1/2 z-[1] h-full object-cover [filter:grayscale(.35)_contrast(1.08)]"
+        style={{
+          width: 'var(--taca-larg)',
+          translate: '-50% 0',
+          WebkitMaskImage: ESFUMADO,
+          maskImage: ESFUMADO,
+        }}
       />
 
       <h2
@@ -154,8 +223,14 @@ export function DivisorIntensidade(): React.JSX.Element {
       <Picture
         name="splash-taca"
         data-divisor-foto
-        className="absolute inset-0 z-[3] h-full w-full object-cover [filter:grayscale(.35)_contrast(1.08)]"
-        style={{ WebkitMaskImage: MASCARA, maskImage: MASCARA }}
+        sizes="min(91.3svh, 100vw)"
+        className="absolute top-0 left-1/2 z-[3] h-full object-cover [filter:grayscale(.35)_contrast(1.08)]"
+        style={{
+          width: 'var(--taca-larg)',
+          translate: '-50% 0',
+          WebkitMaskImage: MASCARA,
+          maskImage: MASCARA,
+        }}
       />
     </section>
   );

@@ -89,12 +89,15 @@ export function SeloCera(): React.JSX.Element {
       onMouseLeave={() => acelerar(1)}
       onFocus={() => acelerar(3)}
       onBlur={() => acelerar(1)}
-      className="relative mt-[48px] inline-flex h-[184px] w-[184px] items-center justify-center rounded-full"
+      // 150px cravados no mobile: o diâmetro é fixo, nunca uma fração da
+      // tela, senão num celular estreito o selo vira uma moeda e num tablet
+      // engole a coluna. `shrink-0` para o flex do container não o achatar.
+      className="relative mt-[48px] inline-flex h-[150px] w-[150px] shrink-0 items-center justify-center rounded-full lg:h-[184px] lg:w-[184px]"
       style={{ background: CERA, boxShadow: RELEVO }}
     >
       <span
         aria-hidden="true"
-        className="font-display text-[52px] leading-none font-bold text-dourado"
+        className="font-display text-[42px] leading-none font-bold text-dourado lg:text-[52px]"
       >
         MV
       </span>

@@ -127,22 +127,60 @@ export function Terroir(): React.JSX.Element {
       // ------------------------------------------------------- as anotações
       // Desktop desenha ponto + linha + número sobre a foto; no mobile a mesma
       // sequência acontece na lista, sem as linhas.
-      const montarContagem = (escopo: string) =>
+      /**
+       * A contagem de um bloco (mapa no desktop, lista no mobile).
+       *
+       * O bug que isto corrige: aparecia 0, o número final piscava e só
+       * então a contagem recomeçava do zero. Eram duas causas somadas.
+       *
+       * 1. O valor final vem do JSX (é o que fica em cena se o JS falhar),
+       *    então ele era exibido nos frames entre a montagem e o primeiro
+       *    `onUpdate` do tween — o "pisca".
+       * 2. O `ScrollTrigger.refresh()` que roda quando as seções terminam de
+       *    se armar (ver `liberarAnimacoes`) reposiciona todo mundo, porque
+       *    o pin do divisor acabou de empurrar 120vh para baixo. Um trigger
+       *    que já tinha passado voltava a ser "ainda não alcançado", e o
+       *    ScrollTrigger rebobinava o tween para o progresso 0 — daí a
+       *    segunda contagem.
+       *
+       * A resposta é `once: true` (depois de contar, o trigger morre e
+       * nenhum refresh o rebobina) mais um estado inicial escrito aqui no
+       * JS, nunca no HTML: quem não tem JS continua vendo o número certo.
+       */
+      const montarContagem = (escopo: string): gsap.core.Tween[] =>
+        ANOTACOES.flatMap((a) => {
+          const [alvo] = q(`${escopo} [data-contador='${a.id}']`);
+          if (!alvo) return [];
+
+          gsap.set(alvo, { autoAlpha: 0 });
+          alvo.textContent = '0';
+
+          const proxy = { v: 0 };
+          return [
+            gsap.to(proxy, {
+              v: a.valor,
+              duration: 1.2,
+              ease: 'power1.inOut',
+              snap: { v: a.passo },
+              onStart: () => gsap.set(alvo, { autoAlpha: 1 }),
+              onUpdate: () => {
+                alvo.textContent = formatar(a, proxy.v);
+              },
+              scrollTrigger: { trigger: alvo, start: 'top 75%', once: true },
+            }),
+          ];
+        });
+
+      /** devolve o número final e a visibilidade — para quando a media query vira */
+      const desmontarContagem = (tws: gsap.core.Tween[], escopo: string) => {
+        tws.forEach((t) => t.kill());
         ANOTACOES.forEach((a) => {
           const [alvo] = q(`${escopo} [data-contador='${a.id}']`);
           if (!alvo) return;
-          const proxy = { n: 0 };
-          gsap.to(proxy, {
-            n: a.valor,
-            duration: 1.2,
-            ease: 'power1.inOut',
-            snap: { n: a.passo },
-            onUpdate: () => {
-              alvo.textContent = formatar(a, proxy.n);
-            },
-            scrollTrigger: { trigger: alvo, start: 'top 75%' },
-          });
+          gsap.set(alvo, { clearProps: 'opacity,visibility' });
+          alvo.textContent = formatar(a, a.valor);
         });
+      };
 
       mm.add('(min-width: 900px)', () => {
         const tl = gsap.timeline({
@@ -167,8 +205,11 @@ export function Terroir(): React.JSX.Element {
               at + 0.45,
             );
         });
-        montarContagem('[data-terroir-mapa]');
-        return () => tl.kill();
+        const contagens = montarContagem('[data-terroir-mapa]');
+        return () => {
+          tl.kill();
+          desmontarContagem(contagens, '[data-terroir-mapa]');
+        };
       });
 
       mm.add('(max-width: 899px)', () => {
@@ -180,8 +221,11 @@ export function Terroir(): React.JSX.Element {
           stagger: 0.14,
           scrollTrigger: { trigger: '[data-terroir-lista]', start: 'top 85%' },
         });
-        montarContagem('[data-terroir-lista]');
-        return () => tw.kill();
+        const contagens = montarContagem('[data-terroir-lista]');
+        return () => {
+          tw.kill();
+          desmontarContagem(contagens, '[data-terroir-lista]');
+        };
       });
 
       return () => {
@@ -253,7 +297,9 @@ export function Terroir(): React.JSX.Element {
                 style={{ ...a.texto, textShadow: '0 1px 12px rgba(20,8,11,.75)' }}
               >
                 <span className="block font-display text-[clamp(26px,2.4vw,38px)] leading-none text-dourado">
-                  <span data-contador={a.id}>{formatar(a, a.valor)}</span>
+                  <span data-contador={a.id} data-final={String(a.valor)}>
+                    {formatar(a, a.valor)}
+                  </span>
                 </span>
                 <span className="mt-[7px] block text-[10px] tracking-[.3em] text-creme/88 uppercase">
                   {a.rotulo}
@@ -280,7 +326,9 @@ export function Terroir(): React.JSX.Element {
                 style={{ boxShadow: '0 0 0 4px rgba(201,164,92,.18)' }}
               />
               <span className="font-display text-[26px] leading-none text-dourado">
-                <span data-contador={a.id}>{formatar(a, a.valor)}</span>
+                <span data-contador={a.id} data-final={String(a.valor)}>
+                    {formatar(a, a.valor)}
+                  </span>
               </span>
               <span className="text-[10px] tracking-[.26em] text-creme/70 uppercase">
                 {a.rotulo}

@@ -20,6 +20,8 @@ const TELAS = [
   ['768x1024', 768, 1024], // tablet retrato
   ['1024x768', 1024, 768], // tablet paisagem (curta)
   ['1280x720', 1280, 720], // notebook curto
+  ['1280x800', 1280, 800], // notebook 16:10
+  ['1366x768', 1366, 768], // o notebook mais comum do mundo
   ['1440x900', 1440, 900],
   ['1570x1000', 1570, 1000], // a tela do print
   ['1920x1080', 1920, 1080],

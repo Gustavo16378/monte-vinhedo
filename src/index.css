@@ -79,12 +79,46 @@
 
 /* ------------------------------------------------------------------- base */
 @layer base {
+  /* Faixa que a Lombada ocupa na lateral esquerda.
+     Vive no `:root` porque não é só o hero que precisa dela: toda seção
+     centrada tem que saber qual pedaço da tela está reservado para a
+     navegação, senão o eixo do texto nasce torto (ver Manifesto). */
+  :root {
+    --lombada-w: 0px;
+  }
+
+  @media (width >= 900px) {
+    :root {
+      --lombada-w: clamp(48px, 4vw, 64px);
+    }
+  }
+
   html {
     /* `clip` em vez de `hidden`: não cria contexto de rolagem e por isso não
        briga com o pin do ScrollTrigger nem com a Lombada fixa. */
     overflow-x: hidden;
     overflow-x: clip;
     /* nada de scroll-behavior:smooth — quem conduz o scroll é o Lenis */
+  }
+
+  /* Quem rola é o documento raiz — o Lenis não usa wrapper próprio, ele
+     conduz o scroll da própria janela. Então a barra a esconder é a do
+     html; as outras duas regras são cinto e suspensório para o caso de o
+     Lenis passar a envolver o conteúdo em `.lenis`. Nenhum container
+     interno tem rolagem própria: `overflow-x: clip` (e não `hidden`) em
+     html/body existe justamente para não criar um. */
+  html,
+  body {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  html::-webkit-scrollbar,
+  body::-webkit-scrollbar,
+  .lenis::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
   }
 
   body {
@@ -153,31 +187,14 @@
 }
 
 /* Altura do hero. `svh` em vez de `vh` para que a barra de URL do mobile
-   apareça e suma sem reposicionar as camadas do sanduíche. */
+   apareça e suma sem reposicionar as camadas do sanduíche. Altura fixa (e
+   não `min-height`): a composição é uma tela cheia exata, e o que passar
+   disso — a garrafa sangrando na base do pôster mobile — é aparado pelo
+   `overflow: clip` do próprio hero. */
 @utility hero-altura {
-  min-height: 100vh;
-  min-height: 100svh;
+  height: 100vh;
+  height: 100svh;
 }
-
-/* ─────────────────────────────────────────────────────── escala do hero ──
-   O sanduíche do hero tem que se sustentar em qualquer proporção de tela,
-   não só nas duas que a gente costuma testar. Duas medidas do Zodiak
-   sustentam a conta:
-
-     "MONTE"   em 700, tracking -.01em ....... 3,97em de largura
-     "VINHEDO" em 400, tracking  .3em ........ 7,09em de largura
-
-   Daí sai o corpo que faz cada palavra ocupar a largura desejada — por
-   exemplo, 102vw (tocando as duas bordas, 1vw de sangria de cada lado)
-   pede 102/3,97 = 25,7vw.
-
-   O segundo termo, em svh, é o que faltava: sozinho, o vw fazia o MONTE
-   crescer sem limite numa tela larga e baixa até engolir a garrafa, que é
-   medida em altura. Com `min()`, a largura manda nas telas altas (celular)
-   e a altura manda nas baixas (notebook 16:9, ultrawide). A troca acontece
-   por volta de 1,75:1 e é contínua — não há degrau em lugar nenhum.
-
-   Os `clamp()` externos são só os limites de sanidade nos extremos. */
 /* Estado inicial de tudo que a abertura anima.
    Fica no CSS, aplicado no JSX — não num `gsap.set()` depois do mount. Um
    `set` só roda no primeiro layout effect, e até lá o browser já pintou um
@@ -198,7 +215,7 @@
  * conjunto; como "Vinhos finos de altitude" é bem mais larga que
  * "desde 1987", a metade maior avançava 34px por cima do vidro. */
 .legenda-hero {
-  font-size: clamp(9px, 0.85vw, 12px);
+  font-size: var(--legenda-fs);
   font-weight: 400;
   letter-spacing: 0.42em;
   padding-left: 0.42em;
@@ -206,6 +223,24 @@
   white-space: nowrap;
   color: var(--color-creme);
   margin-inline: var(--legenda-vao);
+}
+
+/* No mobile as duas metades voltam a ser a linha única do export, e o
+   ponto médio entre elas é o mesmo separador que o export usa.
+   O tracking cede de .42em para .32em: a linha inteira tem 36 caracteres
+   e, num 360px, .42em a encostava nas duas bordas. */
+@media (width < 900px) {
+  .legenda-hero {
+    letter-spacing: 0.32em;
+    padding-left: 0.32em;
+  }
+
+  .legenda-hero[data-legenda-dir]::before {
+    content: '·';
+    margin-right: 0.9em;
+    margin-left: -0.2em;
+    opacity: 0.7;
+  }
 }
 
 @media (width >= 900px) {
@@ -224,42 +259,79 @@
   }
 }
 
+/* ───────────────────────────────── sistema de composição do hero ──
+   Uma escala só governa a composição inteira. Título, garrafa, legenda e
+   vãos são todos múltiplos dela — então a PROPORÇÃO entre eles é a mesma
+   em qualquer tela, e o que muda de uma resolução para outra é só o
+   tamanho global do conjunto. Nada aqui tem valor solto.
+
+   A escala nasce da largura ÚTIL (a tela menos a faixa reservada à
+   Lombada) e é limitada pela altura:
+
+     largura útil ÷ 95,24 ..... faz o MONTE ocupar 92% da largura útil
+     1,85svh .................. teto, para a garrafa — que é medida em
+                                altura — não estourar numa tela baixa
+
+   As duas medidas do Zodiak que sustentam a conta foram MEDIDAS no
+   browser, não estimadas:
+
+     "MONTE"   700, tracking -.01em ... avanço 3,962em · tinta 3,9835em
+     "VINHEDO" 400, tracking  .3em .... avanço 7,098em
+
+   Daí o 95,24: MONTE a 22 unidades tem 22 × 3,9835 = 87,6 unidades de
+   tinta, e 87,6 / 0,92 = 95,24 unidades de largura útil.
+
+   A tinta do M ultrapassa o avanço em 0,0313em à esquerda, então a haste
+   chega mais perto da borda do que a caixa sugere. Com 4% de folga de
+   cada lado ela encosta sem nunca ser amputada — a sangria que o
+   briefing permite, e não o corte que ele proíbe.
+
+   Nas telas de 16:9 quem manda é o teto de altura, e a composição sai
+   igualzinha à do export: garrafa a ~85svh começando a ~10svh. */
 @utility hero-escala {
-  /* largura da silhueta da garrafa ÷ altura dela, medido no PNG:
-     307px de vidro em 341px de imagem, e 341/1197 de proporção. É o que
-     permite abrir o vão da legenda a partir da altura da garrafa. */
+  /* largura da silhueta de vidro ÷ altura da imagem, medido no PNG:
+     307px de vidro em 1197px de altura. É o que permite abrir o vão da
+     legenda a partir da altura da garrafa. */
   --garrafa-larg: 0.2565;
 
-  /* Legenda partida em duas metades. No mobile não há vão: a garrafa ocupa
-     quase toda a largura, e ladeá-la deixaria ~67px por metade — não cabe.
-     Ali as duas metades voltam a ser uma linha só, logo abaixo da base da
-     garrafa (89svh), que continua cumprindo a regra: nenhum texto sobre o
-     vidro. No desktop elas abrem o vão da silhueta mais 48px de respiro. */
-  --legenda-vao: 7px;
-  --legenda-topo: 91.5svh;
+  --hero-largura: calc(100vw - var(--lombada-w));
+  --hero-scale: calc(var(--hero-largura) / 95.24);
 
-  /* Sem teto: um teto em px faria o MONTE, que toca as bordas em todo lugar,
-     virar uma palavra encolhida no meio da tela a partir de certa largura —
-     e é justamente essa quebra de proporção que se quer evitar. Em 4K a
-     palavra é grande porque a tela é grande; a composição é a mesma. */
-  --monte: max(64px, min(25.7vw, 45svh));
-  --vinhedo: clamp(34px, min(12.97vw, 12svh), 150px);
-  --legenda-offset: clamp(52px, min(17vw, 11svh), 96px);
-  --garrafa-topo: 15svh;
-  --garrafa-altura: 74svh;
-  --monte-topo: 12svh;
-  --vinhedo-topo: 58svh;
+  /* ── MOBILE (< 900px): recomposição, não encolhimento ──────────────
+     MONTE e VINHEDO empilham ACIMA da garrafa, e a garrafa vira pôster:
+     centralizada, sangrando 8% na base de propósito. A legenda volta a
+     ser uma linha só, acima da dobra. Cada degrau da pilha é derivado do
+     anterior, então ela nunca se atropela — nem num 360x640. */
+  --monte: calc(var(--hero-scale) * 20);
+  --vinhedo: calc(var(--hero-scale) * 8.18);
+  --legenda-fs: clamp(9px, calc(var(--hero-scale) * 2.6), 12px);
 
+  --monte-topo: 7svh;
+  --vinhedo-topo: calc(var(--monte-topo) + var(--monte) * 0.78 + var(--hero-scale) * 2);
+  --legenda-topo: calc(var(--vinhedo-topo) + var(--vinhedo) * 0.9 + var(--hero-scale) * 3);
+  --garrafa-topo: calc(var(--legenda-topo) + var(--legenda-fs) + var(--hero-scale) * 5);
+  --garrafa-altura: calc(108svh - var(--garrafa-topo));
+  --legenda-vao: 0px;
+
+  /* ── DESKTOP (>= 900px): a composição do export ────────────────────
+     Sanduíche: MONTE atrás, garrafa no meio, VINHEDO na frente. A base
+     da garrafa alinha ao fim do viewport com 3 unidades de respiro, e a
+     legenda parte em duas metades que abrem o vão da silhueta + 48px. */
   @media (width >= 900px) {
-    /* No desktop o VINHEDO recua para ~52vw de largura (7,33vw de corpo),
-       que é a proporção do export; no mobile ele ocupa ~92vw. */
-    --vinhedo: clamp(38px, min(7.33vw, 12svh), 150px);
-    --legenda-offset: clamp(56px, min(9.4vw, 13svh), 176px);
-    --garrafa-topo: 10svh;
-    --garrafa-altura: 85svh;
+    --hero-scale: min(calc(var(--hero-largura) / 95.24), 1.85svh);
+
+    --monte: calc(var(--hero-scale) * 22);
+    --vinhedo: calc(var(--hero-scale) * 9);
+    --legenda-fs: clamp(10px, calc(var(--hero-scale) * 0.62), 14px);
+
+    --garrafa-altura: calc(var(--hero-scale) * 47);
+    --garrafa-respiro: calc(var(--hero-scale) * 3);
+    --garrafa-topo: calc(100svh - var(--garrafa-respiro) - var(--garrafa-altura));
+
+    --monte-topo: 12svh;
     --vinhedo-topo: 60svh;
+    --legenda-topo: calc(var(--vinhedo-topo) + var(--vinhedo) * 1.05);
     --legenda-vao: calc(var(--garrafa-altura) * var(--garrafa-larg) / 2 + 48px);
-    --legenda-topo: calc(var(--vinhedo-topo) + var(--legenda-offset));
   }
 }
 
