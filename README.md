@@ -15,11 +15,10 @@ npm run dev
 
 | Arquivo | Papel |
 | --- | --- |
-| `projeto/index.html` + `projeto/assets/` | export do design aprovado — a referência visual e a origem de todos os assets |
 | `MOTION.md` | a partitura das animações; cada componente cita a seção que implementa |
 | `src/motion/` | tokens de movimento, Lenis, fundo do body, capítulo corrente, prontidão |
 | `src/components/` | uma seção por arquivo, na ordem da rolagem |
-| `scripts/prepare-assets.py` | gera tudo que vive em `public/` a partir do export |
+| `public/` | imagens, fontes, og e favicon já tratados, prontos para servir |
 
 Três sistemas costuram a página e vale conhecê-los antes de mexer:
 
@@ -50,15 +49,9 @@ adia esse preparo para o primeiro tempo ocioso depois que o hero entra.
 
 ## Assets
 
-`public/` é gerado, mas versionado — o build do Cloudflare não precisa de
-Python. Só rode o pipeline se o export mudar:
-
-```bash
-pip install "pillow>=11.3" numpy "fonttools[woff]"
-npm run assets
-```
-
-Ele produz, a partir de `projeto/assets/`:
+Os assets de `public/` (e os manifestos `src/assets/images.ts` e
+`src/assets/monogram.ts`) já estão tratados e versionados; são a fonte de
+verdade, e o build não depende de nenhum pipeline externo. O que eles contêm:
 
 - **derivadas responsivas** em avif/webp + fallback, nas larguras em que cada
   imagem é de fato renderizada, mais `src/assets/images.ts` (manifesto tipado

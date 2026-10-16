@@ -1,4 +1,3 @@
-// GERADO POR scripts/prepare-assets.py — não editar à mão.
 // Contornos reais do 'M' e do 'V' em Zodiak 700, a mesma face do lettering
 // do site. O Preloader traça os dois com DrawSVG; o selo de cera repete a
 // forma em texto.

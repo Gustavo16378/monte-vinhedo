@@ -4,8 +4,7 @@
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
 
-# Fontes e derivadas de imagem: nome estável, mas o conteúdo só muda quando
-# scripts/prepare-assets.py roda de novo. Um ano com revalidação silenciosa.
+# Fontes e derivadas de imagem: nome estável, conteúdo tratado e versionado.
 /fonts/*
   Cache-Control: public, max-age=31536000, immutable
   Access-Control-Allow-Origin: *

@@ -1,4 +1,3 @@
-// GERADO POR scripts/prepare-assets.py — não editar à mão.
 // Cada entrada descreve as derivadas responsivas de uma imagem do export.
 
 export type ImageMeta = {

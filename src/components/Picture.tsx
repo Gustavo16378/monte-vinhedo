@@ -20,7 +20,7 @@ const srcset = (name: string, ext: string, widths: readonly number[]): string =>
 
 /**
  * `<picture>` com avif/webp e fallback, montado a partir de
- * `src/assets/images.ts` (gerado por scripts/prepare-assets.py).
+ * `src/assets/images.ts`.
  *
  * As dimensões intrínsecas vão sempre no `<img>` para reservar espaço e
  * manter o CLS em zero, mesmo quando o CSS depois estica a imagem.
